@@ -1,0 +1,247 @@
+[
+  {
+    "id": "e1",
+    "community_id": "c1",
+    "title": "Go Concurrency Workshop",
+    "slug": "go-concurrency-workshop",
+    "overview": "A deep-dive workshop into Go concurrency patterns, goroutines, channels, and select statements.",
+    "description": "A hands-on workshop that takes you from the fundamentals of Go concurrency to the advanced patterns used in production systems.",
+    "schedule": {
+      "date": "2026-08-22",
+      "start_time": "09:00",
+      "end_time": "17:00",
+      "timezone": "WIB"
+    },
+    "location": {
+      "type": "offline",
+      "city": "Bandung",
+      "address": "Bandung Tech Hub, Jl. Riau No. 123"
+    },
+    "tickets": {
+      "capacity": 100,
+      "registered": 48,
+      "is_full": false
+    },
+    "media": {
+      "thumbnail_url": "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5"
+    },
+    "tags": ["Technology", "Programming"],
+    "organizer": {
+      "id": "u1",
+      "name": "Ahmad Fauzan",
+      "community_name": "Bandung Go Community",
+      "avatar_url": "https://images.unsplash.com/photo-1534528741775-53994a69daeb"
+    },
+    "created_at": "2026-08-01"
+  },
+  {
+    "id": "e2",
+    "community_id": "c2",
+    "title": "Frontend Craft & UI Design Conference",
+    "slug": "frontend-craft-conference",
+    "overview": "Building scalable interfaces with modern web standards, React, and Design Systems.",
+    "description": "Building scalable interfaces with modern web standards, React, and performance optimizations.",
+    "schedule": {
+      "date": "2026-10-12",
+      "start_time": "09:00",
+      "end_time": "17:00",
+      "timezone": "WIB"
+    },
+    "location": {
+      "type": "offline",
+      "city": "Jakarta",
+      "address": "Jakarta Convention Center"
+    },
+    "tickets": {
+      "capacity": 200,
+      "registered": 150,
+      "is_full": false
+    },
+    "media": {
+      "thumbnail_url": "https://images.unsplash.com/photo-1507238691740-187a5b1d37b8"
+    },
+    "tags": ["Technology", "Design"],
+    "organizer": {
+      "id": "u4",
+      "name": "Jakarta Frontend Team",
+      "community_name": "Jakarta Frontend Community",
+      "avatar_url": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d"
+    },
+    "created_at": "2026-08-15"
+  },
+  {
+    "id": "e3",
+    "community_id": "c3",
+    "title": "Kubernetes & Cloud Native Workshop",
+    "slug": "kubernetes-cloud-native-workshop",
+    "overview": "Mastering container orchestration, microservices deployment, and cluster management.",
+    "description": "Mastering container orchestration, microservices deployment, and cluster management.",
+    "schedule": {
+      "date": "2026-09-12",
+      "start_time": "09:00",
+      "end_time": "17:00",
+      "timezone": "WIB"
+    },
+    "location": {
+      "type": "online",
+      "city": "Online",
+      "address": null
+    },
+    "tickets": {
+      "capacity": 50,
+      "registered": 45,
+      "is_full": false
+    },
+    "media": {
+      "thumbnail_url": "https://images.unsplash.com/photo-1451187580459-43490279c0fa"
+    },
+    "tags": ["Technology", "Programming"],
+    "organizer": {
+      "id": "u7",
+      "name": "Cloud Native ID",
+      "community_name": "Cloud Native Indonesia",
+      "avatar_url": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e"
+    },
+    "created_at": "2026-08-20"
+  },
+  {
+    "id": "e4",
+    "community_id": "c4",
+    "title": "UI/UX Design Systems Scale-Up",
+    "slug": "ui-ux-design-systems-scale-up",
+    "overview": "How to build, maintain, and scale design systems across cross-functional product teams.",
+    "description": "How to build, maintain, and scale design systems across cross-functional product teams.",
+    "schedule": {
+      "date": "2026-09-25",
+      "start_time": "09:00",
+      "end_time": "17:00",
+      "timezone": "WIB"
+    },
+    "location": {
+      "type": "offline",
+      "city": "Yogyakarta",
+      "address": "Jogja Digital Valley"
+    },
+    "tickets": {
+      "capacity": 75,
+      "registered": 60,
+      "is_full": false
+    },
+    "media": {
+      "thumbnail_url": "https://images.unsplash.com/photo-1561070791-2526d30994b5"
+    },
+    "tags": ["Design"],
+    "organizer": {
+      "id": "u10",
+      "name": "Jogja UI/UX Guild",
+      "community_name": "Jogja Design Community",
+      "avatar_url": "https://images.unsplash.com/photo-1534528741775-53994a69daeb"
+    },
+    "created_at": "2026-08-10"
+  },
+  {
+    "id": "e5",
+    "community_id": "c5",
+    "title": "Startup Business Growth & Scaling Strategies",
+    "slug": "startup-business-growth-scaling",
+    "overview": "Learn how to scale your startup business, secure funding, and build sustainable revenue streams.",
+    "description": "Learn how to scale your startup business, secure funding, and build sustainable revenue streams.",
+    "schedule": {
+      "date": "2026-10-05",
+      "start_time": "09:00",
+      "end_time": "17:00",
+      "timezone": "WIB"
+    },
+    "location": {
+      "type": "offline",
+      "city": "Surabaya",
+      "address": "Surabaya Innovation Center"
+    },
+    "tickets": {
+      "capacity": 120,
+      "registered": 90,
+      "is_full": false
+    },
+    "media": {
+      "thumbnail_url": "https://images.unsplash.com/photo-1518186285589-2f7649de83e0"
+    },
+    "tags": ["Business", "Career"],
+    "organizer": {
+      "id": "u13",
+      "name": "Surabaya Founders Club",
+      "community_name": "Business Surabaya",
+      "avatar_url": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e"
+    },
+    "created_at": "2026-08-05"
+  },
+  {
+    "id": "e6",
+    "community_id": "c6",
+    "title": "Practical AI & Machine Learning Workshop",
+    "slug": "practical-ai-machine-learning",
+    "overview": "Integrating Large Language Models and AI workflows into production web applications.",
+    "description": "Integrating Large Language Models and AI workflows into production web applications.",
+    "schedule": {
+      "date": "2026-11-01",
+      "start_time": "09:00",
+      "end_time": "17:00",
+      "timezone": "WIB"
+    },
+    "location": {
+      "type": "online",
+      "city": "Online",
+      "address": null
+    },
+    "tickets": {
+      "capacity": 150,
+      "registered": 140,
+      "is_full": false
+    },
+    "media": {
+      "thumbnail_url": "https://images.unsplash.com/photo-1563986768609-322da13575f3"
+    },
+    "tags": ["AI", "Technology", "Programming"],
+    "organizer": {
+      "id": "u16",
+      "name": "AI Builders ID",
+      "community_name": "Indonesia AI Community",
+      "avatar_url": "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61"
+    },
+    "created_at": "2026-08-22"
+  },
+  {
+    "id": "e7",
+    "community_id": "c7",
+    "title": "Indie Music & Sound Engineering Fest",
+    "slug": "indie-music-sound-engineering",
+    "overview": "A gathering for musicians, sound engineers, and music producers.",
+    "description": "A gathering for musicians, sound engineers, and music producers.",
+    "schedule": {
+      "date": "2026-11-15",
+      "start_time": "15:00",
+      "end_time": "22:00",
+      "timezone": "WIB"
+    },
+    "location": {
+      "type": "offline",
+      "city": "Bandung",
+      "address": "Bandung Creative Hub"
+    },
+    "tickets": {
+      "capacity": 300,
+      "registered": 280,
+      "is_full": false
+    },
+    "media": {
+      "thumbnail_url": "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4"
+    },
+    "tags": ["Music"],
+    "organizer": {
+      "id": "u18",
+      "name": "Bandung Sound Lab",
+      "community_name": "Bandung Music Collective",
+      "avatar_url": "https://images.unsplash.com/photo-1534528741775-53994a69daeb"
+    },
+    "created_at": "2026-08-18"
+  }
+]
