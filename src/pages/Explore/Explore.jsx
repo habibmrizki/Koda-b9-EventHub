@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useCallback } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -33,21 +33,24 @@ function LandingPage() {
     dispatch(fetchCommunities());
   }, [dispatch]);
 
-  // Read URL params
   const querySearch = searchParams.get("search") || "";
-  const queryTopics = searchParams.get("topics")
-    ? searchParams.get("topics").split(",")
-    : ["All"];
+  const queryTopicsString = searchParams.get("topics");
+
+  const queryTopics = useMemo(() => {
+    return queryTopicsString ? queryTopicsString.split(",") : ["All"];
+  }, [queryTopicsString]);
 
   const [searchInput, setSearchInput] = useState(querySearch);
   const [debouncedSearch, setDebouncedSearch] = useState(querySearch);
   const [selectedTopics, setSelectedTopics] = useState(queryTopics);
 
+  const searchParamsString = searchParams.toString();
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setSearchInput(querySearch);
     setDebouncedSearch(querySearch);
     setSelectedTopics(queryTopics);
-  }, [searchParams.toString()]);
+  }, [searchParamsString, querySearch, queryTopics]);
 
   // Pemicu Modal Instan
   const triggerAuthModalInstantly = (targetPath, e) => {
@@ -70,14 +73,17 @@ function LandingPage() {
     dispatch(toggleJoinCommunity(id));
   };
 
-  const updateUrlParams = (newSearch, newTopics) => {
-    const params = new URLSearchParams();
-    if (newSearch.trim()) params.set("search", newSearch.trim());
-    if (newTopics.length > 0 && !newTopics.includes("All")) {
-      params.set("topics", newTopics.join(","));
-    }
-    setSearchParams(params, { replace: true });
-  };
+  const updateUrlParams = useCallback(
+    (newSearch, newTopics) => {
+      const params = new URLSearchParams();
+      if (newSearch.trim()) params.set("search", newSearch.trim());
+      if (newTopics.length > 0 && !newTopics.includes("All")) {
+        params.set("topics", newTopics.join(","));
+      }
+      setSearchParams(params, { replace: true });
+    },
+    [setSearchParams],
+  );
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -85,7 +91,7 @@ function LandingPage() {
       updateUrlParams(searchInput, selectedTopics);
     }, 300);
     return () => clearTimeout(timer);
-  }, [searchInput]);
+  }, [searchInput, selectedTopics, updateUrlParams]);
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
@@ -94,6 +100,7 @@ function LandingPage() {
   };
 
   const handleTopicClick = (topic) => {
+    // eslint-disable-next-line no-useless-assignment
     let updatedTopics = [];
     if (topic === "All") {
       updatedTopics = ["All"];
