@@ -28,7 +28,7 @@ import DashboardCommunities from "../pages/admin/dashboard/DashboardCommunities"
 
 // Organizer Dashboard Pages
 import OrganizerDashboard from "../pages/Organizer/dashboard/Dashboard";
-import CreateEvent from "../pages/Organizer/createEdit/CreateEditEvent";
+import CreateEvent from "../pages/Organizer/createEdit/CreateEvent";
 
 // My Events
 import MyEvents from "../pages/my-events/MyEvents";
