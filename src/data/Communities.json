@@ -1,0 +1,408 @@
+[
+  {
+    "id": 1,
+    "name": "Bandung Go Community",
+    "description": "The premier Go programming community in Bandung — weekly meetups, workshops, and mentoring for Gophers at all levels.",
+    "cover_image": "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&q=80",
+    "categories": ["Technology", "Programming"],
+    "members_count": 847,
+    "upcoming_events_count": 3,
+    "is_joined": true,
+    "members": [
+      {
+        "id": 101,
+        "name": "Ahmad Fauzan",
+        "role": "Staff Engineer",
+        "avatar": "https://i.pravatar.cc/150?u=1"
+      },
+      {
+        "id": 102,
+        "name": "Dina Rahayu",
+        "role": "Backend Lead",
+        "avatar": "https://i.pravatar.cc/150?u=2"
+      },
+      {
+        "id": 103,
+        "name": "Rizky Pratama",
+        "role": "Engineering Manager",
+        "avatar": "https://i.pravatar.cc/150?u=3"
+      },
+      {
+        "id": 104,
+        "name": "Sinta Dewi",
+        "role": "Senior Frontend Engineer",
+        "avatar": "https://i.pravatar.cc/150?u=4"
+      }
+    ],
+    "discussions": [
+      {
+        "id": 1001,
+        "author": "Ahmad Fauzan",
+        "avatar": "https://i.pravatar.cc/150?u=1",
+        "time_ago": "1d ago",
+        "content": "Welcome everyone to our community! Excited to have so many new members join this month."
+      },
+      {
+        "id": 1002,
+        "author": "Dina Rahayu",
+        "avatar": "https://i.pravatar.cc/150?u=2",
+        "time_ago": "3d ago",
+        "content": "Has anyone tried the new generics features in Go 1.22? Would love to discuss at the next meetup."
+      }
+    ],
+    "upcoming_events": [
+      {
+        "id": 2001,
+        "title": "Go Concurrency Workshop",
+        "date": "Aug 22, 2026 · 09:00 WIB",
+        "location": "Bandung",
+        "registered": 48,
+        "capacity": 100,
+        "image": "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=600&q=80",
+        "is_registered": false,
+        "categories": ["Technology", "Programming"]
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "name": "Jakarta AI & ML Club",
+    "description": "Researchers, practitioners, and enthusiasts exploring machine learning, LLMs, and the future of artificial intelligence.",
+    "cover_image": "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&w=800&q=80",
+    "categories": ["AI", "Technology"],
+    "members_count": 2341,
+    "upcoming_events_count": 5,
+    "is_joined": true,
+    "members": [
+      {
+        "id": 201,
+        "name": "Budi Santoso",
+        "role": "AI Researcher",
+        "avatar": "https://i.pravatar.cc/150?u=7"
+      },
+      {
+        "id": 202,
+        "name": "Maya Indah",
+        "role": "Data Scientist",
+        "avatar": "https://i.pravatar.cc/150?u=8"
+      },
+      {
+        "id": 203,
+        "name": "Fajar Nugraha",
+        "role": "MLOps Engineer",
+        "avatar": "https://i.pravatar.cc/150?u=9"
+      }
+    ],
+    "discussions": [
+      {
+        "id": 1003,
+        "author": "Budi Santoso",
+        "avatar": "https://i.pravatar.cc/150?u=7",
+        "time_ago": "2h ago",
+        "content": "Ada yang tertarik bikin paper reading session minggu depan tentang Local LLM?"
+      },
+      {
+        "id": 1004,
+        "author": "Maya Indah",
+        "avatar": "https://i.pravatar.cc/150?u=8",
+        "time_ago": "5h ago",
+        "content": "Rekomendasi GPU cloud murah buat fine-tuning model 7B dong teman-teman."
+      }
+    ],
+    "upcoming_events": [
+      {
+        "id": 2002,
+        "title": "Practical AI & Machine Learning Workshop",
+        "date": "Nov 01, 2026 · 09:00 WIB",
+        "location": "Online",
+        "registered": 140,
+        "capacity": 150,
+        "image": "https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&w=600&q=80",
+        "is_registered": true,
+        "categories": ["AI", "Technology"]
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "name": "Indonesia Frontend Devs",
+    "description": "The largest frontend community in Indonesia. React, Vue, Svelte, performance, accessibility — all things frontend.",
+    "cover_image": "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=800&q=80",
+    "categories": ["Technology", "Programming"],
+    "members_count": 5621,
+    "upcoming_events_count": 4,
+    "is_joined": false,
+    "members": [
+      {
+        "id": 301,
+        "name": "Ahmad Fauzan",
+        "role": "Staff Engineer",
+        "avatar": "https://i.pravatar.cc/150?u=1"
+      },
+      {
+        "id": 302,
+        "name": "Dina Rahayu",
+        "role": "Backend Lead",
+        "avatar": "https://i.pravatar.cc/150?u=2"
+      },
+      {
+        "id": 303,
+        "name": "Kevin Sanjaya",
+        "role": "Frontend Developer",
+        "avatar": "https://i.pravatar.cc/150?u=10"
+      }
+    ],
+    "discussions": [
+      {
+        "id": 1005,
+        "author": "Kevin Sanjaya",
+        "avatar": "https://i.pravatar.cc/150?u=10",
+        "time_ago": "1d ago",
+        "content": "Kalian lebih pilih Tailwind v4 atau CSS Modules buat project enterprise?"
+      }
+    ],
+    "upcoming_events": [
+      {
+        "id": 2003,
+        "title": "Frontend Craft Conference",
+        "date": "Oct 12, 2026 · 09:00 WIB",
+        "location": "Jakarta",
+        "registered": 150,
+        "capacity": 200,
+        "image": "https://images.unsplash.com/photo-1542831371-29b0f74f9713?auto=format&fit=crop&w=600&q=80",
+        "is_registered": false,
+        "categories": ["Technology", "Programming"]
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "name": "Product Minds Indonesia",
+    "description": "Product managers, designers, and builders sharing frameworks, tools, and career growth strategies.",
+    "cover_image": "https://images.unsplash.com/photo-1531403009284-440f080d1e12?auto=format&fit=crop&w=800&q=80",
+    "categories": ["Business", "Career"],
+    "members_count": 1203,
+    "upcoming_events_count": 2,
+    "is_joined": false,
+    "members": [
+      {
+        "id": 401,
+        "name": "Nadia Utama",
+        "role": "Principal PM",
+        "avatar": "https://i.pravatar.cc/150?u=11"
+      },
+      {
+        "id": 402,
+        "name": "Rian Kusuma",
+        "role": "Product Designer",
+        "avatar": "https://i.pravatar.cc/150?u=12"
+      }
+    ],
+    "discussions": [
+      {
+        "id": 1006,
+        "author": "Nadia Utama",
+        "avatar": "https://i.pravatar.cc/150?u=11",
+        "time_ago": "4d ago",
+        "content": "Share pengalaman kalian menghadapi stakeholder yang sering ganti requirement mid-sprint dong."
+      }
+    ],
+    "upcoming_events": [
+      {
+        "id": 2004,
+        "title": "Product Roadmap Best Practices",
+        "date": "Nov 10, 2026 · 13:00 WIB",
+        "location": "Online",
+        "registered": 80,
+        "capacity": 100,
+        "image": "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=600&q=80",
+        "is_registered": false,
+        "categories": ["Business", "Career"]
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "name": "Creative Coders Collective",
+    "description": "Design and code intersect here — generative art, design systems, creative development, and interactive web.",
+    "cover_image": "https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?auto=format&fit=crop&w=800&q=80",
+    "categories": ["Design", "Programming"],
+    "members_count": 934,
+    "upcoming_events_count": 2,
+    "is_joined": true,
+    "members": [
+      {
+        "id": 501,
+        "name": "Sarah Amalia",
+        "role": "Creative Developer",
+        "avatar": "https://i.pravatar.cc/150?u=13"
+      },
+      {
+        "id": 502,
+        "name": "Gery Arisandi",
+        "role": "3D Generalist",
+        "avatar": "https://i.pravatar.cc/150?u=14"
+      }
+    ],
+    "discussions": [
+      {
+        "id": 1007,
+        "author": "Sarah Amalia",
+        "avatar": "https://i.pravatar.cc/150?u=13",
+        "time_ago": "2d ago",
+        "content": "Showcase karya Three.js baru saya! Silakan beri saran untuk perbaikan shader-nya ya."
+      }
+    ],
+    "upcoming_events": [
+      {
+        "id": 2005,
+        "title": "UI/UX Design Systems Scale-Up",
+        "date": "Sep 25, 2026 · 09:00 WIB",
+        "location": "Yogyakarta",
+        "registered": 60,
+        "capacity": 75,
+        "image": "https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=600&q=80",
+        "is_registered": false,
+        "categories": ["Design"]
+      }
+    ]
+  },
+  {
+    "id": 6,
+    "name": "Startup Founders Circle",
+    "description": "Early-stage founders in Indonesia supporting each other through fundraising, product, and hiring challenges.",
+    "cover_image": "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&w=800&q=80",
+    "categories": ["Business"],
+    "members_count": 789,
+    "upcoming_events_count": 3,
+    "is_joined": false,
+    "members": [
+      {
+        "id": 601,
+        "name": "Denny Setiawan",
+        "role": "CEO & Founder",
+        "avatar": "https://i.pravatar.cc/150?u=15"
+      },
+      {
+        "id": 602,
+        "name": "Jessica Veranda",
+        "role": "Co-founder & COO",
+        "avatar": "https://i.pravatar.cc/150?u=16"
+      }
+    ],
+    "discussions": [
+      {
+        "id": 1008,
+        "author": "Denny Setiawan",
+        "avatar": "https://i.pravatar.cc/150?u=15",
+        "time_ago": "3d ago",
+        "content": "Ada rekomendasi angel investor lokal yang ramah untuk startup B2B SaaS edisi awal?"
+      }
+    ],
+    "upcoming_events": [
+      {
+        "id": 2006,
+        "title": "Startup Business Growth & Scaling Strategies",
+        "date": "Oct 05, 2026 · 09:00 WIB",
+        "location": "Surabaya",
+        "registered": 90,
+        "capacity": 120,
+        "image": "https://images.unsplash.com/photo-1518186285589-2f7649de83e0?auto=format&fit=crop&w=600&q=80",
+        "is_registered": false,
+        "categories": ["Business", "Career"]
+      }
+    ]
+  },
+  {
+    "id": 7,
+    "name": "Data Science ID",
+    "description": "Data scientists and analysts across Indonesia — sharing datasets, papers, and practical ML implementations.",
+    "cover_image": "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=800&q=80",
+    "categories": ["AI", "Programming"],
+    "members_count": 1567,
+    "upcoming_events_count": 2,
+    "is_joined": false,
+    "members": [
+      {
+        "id": 701,
+        "name": "Bagus Pratama",
+        "role": "Lead Data Analyst",
+        "avatar": "https://i.pravatar.cc/150?u=17"
+      },
+      {
+        "id": 702,
+        "name": "Fitriani",
+        "role": "BI Engineer",
+        "avatar": "https://i.pravatar.cc/150?u=18"
+      }
+    ],
+    "discussions": [
+      {
+        "id": 1009,
+        "author": "Bagus Pratama",
+        "avatar": "https://i.pravatar.cc/150?u=17",
+        "time_ago": "5d ago",
+        "content": "Sharing dataset gratis analisis transaksi e-commerce Indonesia untuk latihan teman-teman."
+      }
+    ],
+    "upcoming_events": [
+      {
+        "id": 2007,
+        "title": "Kubernetes & Cloud Native Workshop",
+        "date": "Sep 12, 2026 · 09:00 WIB",
+        "location": "Online",
+        "registered": 45,
+        "capacity": 50,
+        "image": "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=600&q=80",
+        "is_registered": false,
+        "categories": ["Technology", "Programming"]
+      }
+    ]
+  },
+  {
+    "id": 8,
+    "name": "Music Tech Community",
+    "description": "Producers, sound engineers, and musicians who love blending technology with music creation.",
+    "cover_image": "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=800&q=80",
+    "categories": ["Music"],
+    "members_count": 445,
+    "upcoming_events_count": 1,
+    "is_joined": false,
+    "members": [
+      {
+        "id": 801,
+        "name": "Taufik Hidayat",
+        "role": "Sound Engineer",
+        "avatar": "https://i.pravatar.cc/150?u=19"
+      },
+      {
+        "id": 802,
+        "name": "Reza Rahardian",
+        "role": "Music Producer",
+        "avatar": "https://i.pravatar.cc/150?u=20"
+      }
+    ],
+    "discussions": [
+      {
+        "id": 1010,
+        "author": "Taufik Hidayat",
+        "avatar": "https://i.pravatar.cc/150?u=19",
+        "time_ago": "6d ago",
+        "content": "Ada yang mengintegrasikan Web Audio API ke Ableton via MIDI controller?"
+      }
+    ],
+    "upcoming_events": [
+      {
+        "id": 2008,
+        "title": "Indie Music & Sound Engineering Fest",
+        "date": "Nov 15, 2026 · 15:00 WIB",
+        "location": "Bandung",
+        "registered": 280,
+        "capacity": 300,
+        "image": "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=600&q=80",
+        "is_registered": false,
+        "categories": ["Music"]
+      }
+    ]
+  }
+]
