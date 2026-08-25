@@ -352,6 +352,138 @@ function LandingPage() {
                   </div>
                 </div>
               )}
+
+              {/* Testimonials Section */}
+              <div className="pt-8">
+                <h2 className="font-jakarta font-bold text-2xl md:text-3xl text-gray-900 dark:text-white mb-8">
+                  What the community says
+                </h2>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div className="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 p-6 rounded-2xl flex flex-col justify-between shadow-xs">
+                    <div>
+                      <span className="text-orange-500 text-2xl font-serif font-bold leading-none select-none">
+                        “
+                      </span>
+                      <p className="font-inter text-gray-600 dark:text-gray-300 text-xs md:text-sm leading-relaxed mt-2 mb-6">
+                        EventHub completely changed how I network. I met my
+                        current co-founder at a Jakarta AI meetup I found here.
+                        The community pages make it so easy to find people who
+                        are into the same things.
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="w-9 h-9 rounded-full bg-blue-600 text-white font-semibold text-xs flex items-center justify-center shrink-0">
+                        RN
+                      </div>
+                      <div>
+                        <h4 className="font-jakarta font-bold text-sm text-gray-900 dark:text-white leading-tight">
+                          Raisa Nurdiana
+                        </h4>
+                        <p className="font-inter text-xs text-gray-400">
+                          Frontend Engineer · Cakrawala Digital
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 p-6 rounded-2xl flex flex-col justify-between shadow-xs">
+                    <div>
+                      <span className="text-orange-500 text-2xl font-serif font-bold leading-none select-none">
+                        “
+                      </span>
+                      <p className="font-inter text-gray-600 dark:text-gray-300 text-xs md:text-sm leading-relaxed mt-2 mb-6">
+                        We used to manage event registrations over WhatsApp
+                        groups. Switching to EventHub as our organizer platform
+                        cut our admin overhead in half and attendance actually
+                        went up.
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="w-9 h-9 rounded-full bg-emerald-500 text-white font-semibold text-xs flex items-center justify-center shrink-0">
+                        BH
+                      </div>
+                      <div>
+                        <h4 className="font-jakarta font-bold text-sm text-gray-900 dark:text-white leading-tight">
+                          Bimo Hartanto
+                        </h4>
+                        <p className="font-inter text-xs text-gray-400">
+                          Product Manager · Nusantara Labs
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 p-6 rounded-2xl flex flex-col justify-between shadow-xs">
+                    <div>
+                      <span className="text-orange-500 text-2xl font-serif font-bold leading-none select-none">
+                        “
+                      </span>
+                      <p className="font-inter text-gray-600 dark:text-gray-300 text-xs md:text-sm leading-relaxed mt-2 mb-6">
+                        I love that I can filter by city and category in one
+                        place. Found a design sprint workshop in Bandung I never
+                        would have discovered otherwise — ended up being one of
+                        the best events I've attended.
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="w-9 h-9 rounded-full bg-orange-600 text-white font-semibold text-xs flex items-center justify-center shrink-0">
+                        IK
+                      </div>
+                      <div>
+                        <h4 className="font-jakarta font-bold text-sm text-gray-900 dark:text-white leading-tight">
+                          Indira Kusuma
+                        </h4>
+                        <p className="font-inter text-xs text-gray-400">
+                          UX Designer · Aruna Kreasi Studio
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Bottom CTA Banner */}
+              <div className="bg-[#18181b] dark:bg-black rounded-3xl p-8 md:p-14 text-center border border-gray-800/60 mt-12">
+                <div className="flex items-center justify-center gap-2 mb-6">
+                  <span className="px-3 py-1 bg-white text-blue-600 font-semibold text-xs rounded-full">
+                    Technology
+                  </span>
+                  <span className="px-3 py-1 bg-white text-purple-600 font-semibold text-xs rounded-full">
+                    AI
+                  </span>
+                  <span className="px-3 py-1 bg-white text-pink-600 font-semibold text-xs rounded-full">
+                    Design
+                  </span>
+                </div>
+
+                <h2 className="font-jakarta font-extrabold text-3xl md:text-4xl text-white mb-4">
+                  Ready to find your community?
+                </h2>
+
+                <p className="font-inter text-gray-400 text-sm md:text-base max-w-xl mx-auto mb-8">
+                  Join thousands of developers, designers, and makers in
+                  Indonesia's most active tech communities.
+                </p>
+
+                <div className="flex flex-wrap items-center justify-center gap-4">
+                  <Link
+                    to="/events"
+                    onClick={(e) => triggerAuthModalInstantly("/events", e)}
+                    className="bg-[#ff5522] hover:bg-orange-600 text-white font-inter text-sm font-semibold px-6 py-3 rounded-xl transition cursor-pointer"
+                  >
+                    Explore Events
+                  </Link>
+                  <Link
+                    to="/communities"
+                    onClick={(e) =>
+                      triggerAuthModalInstantly("/communities", e)
+                    }
+                    className="bg-transparent hover:bg-gray-800 text-gray-300 hover:text-white border border-gray-700 font-inter text-sm font-semibold px-6 py-3 rounded-xl transition cursor-pointer"
+                  >
+                    Browse Communities
+                  </Link>
+                </div>
+              </div>
             </>
           )}
         </div>
