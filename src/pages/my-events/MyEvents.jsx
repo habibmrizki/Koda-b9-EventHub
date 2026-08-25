@@ -174,10 +174,14 @@ const MyEvents = () => {
     userBookmarks = {},
   } = useSelector((state) => state.data || {});
 
+  // useEffect(() => {
+  //   if (events.length === 0) {
+  //     dispatch(fetchEvents());
+  //   }
+  // }, [dispatch]);
+
   useEffect(() => {
-    if (events.length === 0) {
-      dispatch(fetchEvents());
-    }
+    dispatch(fetchEvents());
   }, [dispatch]);
 
   const myRegisteredIds = userRegistrations[userEmail] || [];
