@@ -29,9 +29,13 @@ function LandingPage() {
   } = useSelector((state) => state.data);
 
   useEffect(() => {
-    dispatch(fetchEvents());
-    dispatch(fetchCommunities());
-  }, [dispatch]);
+    if (events.length === 0) {
+      dispatch(fetchEvents());
+    }
+    if (communities.length === 0) {
+      dispatch(fetchCommunities());
+    }
+  }, [dispatch, events.length, communities.length]);
 
   const querySearch = searchParams.get("search") || "";
   const queryTopicsString = searchParams.get("topics");
@@ -172,10 +176,13 @@ function LandingPage() {
     filteredCommunities.length === 0;
 
   return (
-    <div className="bg-gray-900 dark:bg-black min-h-screen text-white transition-colors duration-200">
+    <div className="bg-black dark:bg-black min-h-screen text-white transition-colors duration-200">
       {/* Hero Section */}
-      <section className="py-12 md:py-20 px-4">
-        <div className="max-w-4xl mx-auto text-center">
+      <section className="relative overflow-hidden py-12 md:py-20 px-4">
+        {/* Orange Radial Glow Ambient Background */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[350px] bg-orange-600/20 blur-[120px] rounded-full pointer-events-none" />
+
+        <div className="relative z-10 max-w-4xl mx-auto text-center">
           <div className="px-3.5 py-1.5 mb-6 bg-[#FF5F221A] border border-[#FF5F2233] w-fit mx-auto text-orange-500 font-medium text-xs font-inter rounded-full">
             Discover · Connect · Participate
           </div>
@@ -202,19 +209,6 @@ function LandingPage() {
               className="w-full pl-4 pr-32 py-3.5 bg-gray-800 dark:bg-gray-900 border border-gray-700 dark:border-gray-800 text-white placeholder-gray-400 rounded-xl font-inter text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 transition"
             />
             <div className="absolute right-2 flex items-center gap-1">
-              {searchInput && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    setSearchInput("");
-                    setDebouncedSearch("");
-                    updateUrlParams("", selectedTopics);
-                  }}
-                  className="text-xs text-gray-400 hover:text-white cursor-pointer px-2 py-1.5 bg-gray-700/50 rounded-md"
-                >
-                  Clear
-                </button>
-              )}
               <button
                 type="submit"
                 className="bg-orange-600 hover:bg-orange-500 text-white font-inter text-xs font-semibold px-3 py-2 rounded-lg transition cursor-pointer"

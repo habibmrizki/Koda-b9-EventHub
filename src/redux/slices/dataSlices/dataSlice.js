@@ -30,8 +30,10 @@ export const fetchCommunities = createAsyncThunk(
 const dataSlice = createSlice({
   name: "data",
   initialState: {
-    events: eventsData,
-    communities: initialCommunitiesData,
+    // events: eventsData,
+    // communities: initialCommunitiesData,
+    events: [],
+    communities: [],
     userRegistrations: {},
     userBookmarks: {},
     userCommunities: {},
@@ -43,35 +45,65 @@ const dataSlice = createSlice({
   reducers: {
     addEvent: (state, action) => {
       const form = action.payload;
+
+      let imageUrl = form.coverImage;
+      // Cegah QuotaExceededError pada LocalStorage akibat gambar Base64 terlalu besar
+      if (
+        !imageUrl ||
+        (typeof imageUrl === "string" && imageUrl.length > 500000)
+      ) {
+        imageUrl =
+          "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=800&q=80";
+      }
+
       const newEvent = {
         id: `e-${Date.now()}`,
         community_id: form.community || "c1",
-        title: form.title,
-        slug: form.title.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
+        title: form.title || "Untitled Event",
+        slug: (form.title || "untitled-event")
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, "-"),
         overview: form.description || "",
         description: form.description || "",
+
+        // Kompatibilitas gambar Dashboard & EventsCard
+        image: imageUrl,
+        media: {
+          thumbnail_url: imageUrl,
+          cover_url: imageUrl,
+        },
+
+        // Kompatibilitas tanggal dan lokasi Dashboard & EventsCard
+        dateLocation: `${form.eventDate || "TBD"} · ${form.location || "Online"}`,
         schedule: {
-          date: form.eventDate,
+          date: form.eventDate || "",
           start_time: form.startTime || "09:00",
           end_time: form.endTime || "17:00",
           timezone: "WIB",
         },
         location: {
           type: form.format === "In Person" ? "offline" : "online",
-          city: form.format === "Online" ? "Online" : form.location,
+          city: form.format === "Online" ? "Online" : form.location || "Online",
           address: form.format === "In Person" ? form.location : null,
         },
+
+        // Kompatibilitas pendaftaran & kapasitas
+        attendees: 0,
+        capacity: parseInt(form.capacity, 10) || 100,
         tickets: {
           capacity: parseInt(form.capacity, 10) || 100,
           registered: 0,
           is_full: false,
         },
-        media: {
-          thumbnail_url:
-            form.coverImage ||
-            "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5",
-        },
-        tags: form.category ? [form.category] : ["Technology"],
+
+        // Kategori & Pembicara
+        tags:
+          Array.isArray(form.categories) && form.categories.length > 0
+            ? form.categories
+            : ["Technology"],
+        speakers: form.speakers || [],
+
+        status: "Active",
         organizer: {
           id: "u-myuser",
           name: "User Organizer",
@@ -110,6 +142,7 @@ const dataSlice = createSlice({
           event.tickets.registered = Math.max(0, event.tickets.registered - 1);
           event.tickets.is_full = false;
         }
+        event.attendees = Math.max(0, (event.attendees || 0) - 1);
       } else {
         if (event.tickets?.is_full) return;
         state.userRegistrations[userEmail].push(eventId);
@@ -119,6 +152,7 @@ const dataSlice = createSlice({
             event.tickets.is_full = true;
           }
         }
+        event.attendees = (event.attendees || 0) + 1;
       }
     },
 
@@ -175,6 +209,17 @@ const dataSlice = createSlice({
         community.members_count += 1;
       }
     },
+
+    addEventDiscussion: (state, action) => {
+      const { eventId, discussion } = action.payload;
+      const event = state.events.find((e) => String(e.id) === String(eventId));
+      if (event) {
+        if (!event.discussions) {
+          event.discussions = [];
+        }
+        event.discussions.push(discussion);
+      }
+    },
   },
 
   extraReducers: (builder) => {
@@ -190,12 +235,18 @@ const dataSlice = createSlice({
       })
       .addCase(fetchEvents.fulfilled, (state, action) => {
         state.loadingEvents = false;
+
+        // Jika state.events kosong (pertama kali aplikasi dibuka/belum ada cache)
         if (state.events.length === 0) {
           state.events = action.payload;
         } else {
-          const currentIds = new Set(state.events.map((e) => e.id));
-          const newEvents = action.payload.filter((e) => !currentIds.has(e.id));
-          state.events = [...state.events, ...newEvents];
+          // Jika sudah ada data (termasuk event baru buatan user),
+          // hanya tambahkan event dari JSON yang belum ada ID-nya di state
+          const existingIds = new Set(state.events.map((e) => String(e.id)));
+          const newJsonEvents = action.payload.filter(
+            (e) => !existingIds.has(String(e.id)),
+          );
+          state.events = [...state.events, ...newJsonEvents];
         }
       })
       .addCase(fetchEvents.rejected, (state, action) => {
@@ -219,7 +270,12 @@ const dataSlice = createSlice({
   },
 });
 
-export const { addEvent, joinEvent, toggleJoinCommunity, toggleBookmarkEvent } =
-  dataSlice.actions;
+export const {
+  addEvent,
+  joinEvent,
+  toggleJoinCommunity,
+  toggleBookmarkEvent,
+  addEventDiscussion,
+} = dataSlice.actions;
 
 export default dataSlice.reducer;

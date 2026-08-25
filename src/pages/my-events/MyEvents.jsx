@@ -181,8 +181,10 @@ const MyEvents = () => {
   // }, [dispatch]);
 
   useEffect(() => {
-    dispatch(fetchEvents());
-  }, [dispatch]);
+    if (events.length === 0) {
+      dispatch(fetchEvents());
+    }
+  }, [dispatch, events.length]);
 
   const myRegisteredIds = userRegistrations[userEmail] || [];
   const myBookmarkedIds = userBookmarks[userEmail] || [];

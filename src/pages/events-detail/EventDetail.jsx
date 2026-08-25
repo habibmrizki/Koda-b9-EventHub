@@ -15,6 +15,7 @@ import {
 import {
   joinEvent,
   toggleBookmarkEvent,
+  addEventDiscussion,
 } from "../../redux/slices/dataSlices/dataSlice";
 import EventCard from "../../components/events/EventsCard";
 
@@ -35,10 +36,11 @@ const EventDetail = () => {
   // Cari event spesifik dari Redux state
   const event = events.find((item) => String(item.id) === String(id));
 
-  // State internal untuk Komentar & Notifikasi Share
+  // State internal untuk Form Komentar & Notifikasi Share
   const [commentText, setCommentText] = useState("");
-  const [discussions, setDiscussions] = useState(event?.discussions || []);
   const [copied, setCopied] = useState(false);
+
+  const discussions = event?.discussions || [];
 
   if (!event) {
     return (
@@ -103,7 +105,9 @@ const EventDetail = () => {
       created_at: "Just now",
     };
 
-    setDiscussions([...discussions, newComment]);
+    dispatch(
+      addEventDiscussion({ eventId: event.id, discussion: newComment })
+    );
     setCommentText("");
   };
 
@@ -170,26 +174,41 @@ const EventDetail = () => {
               <div>
                 <h2 className="font-bold text-lg mb-4">Speakers</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {event.speakers.map((speaker) => (
-                    <div
-                      key={speaker.id}
-                      className="p-4 border border-gray-200 rounded-2xl flex items-center gap-3 bg-white"
-                    >
-                      <img
-                        src={speaker.avatar_url}
-                        alt={speaker.name}
-                        className="w-12 h-12 rounded-full object-cover bg-gray-100"
-                      />
-                      <div>
-                        <h3 className="font-semibold text-sm text-gray-900">
-                          {speaker.name}
-                        </h3>
-                        <p className="text-xs text-gray-500">
-                          {speaker.role} at {speaker.company}
-                        </p>
+                  {event.speakers.map((speaker, idx) => {
+                    const isObject =
+                      typeof speaker === "object" && speaker !== null;
+
+                    const name = isObject ? speaker.name : speaker;
+                    const role = isObject ? speaker.role : "Guest Speaker";
+                    const company = isObject ? speaker.company : "";
+                    const avatar =
+                      isObject && speaker.avatar_url
+                        ? speaker.avatar_url
+                        : `https://ui-avatars.com/api/?name=${encodeURIComponent(
+                            name || "Speaker",
+                          )}&background=f97316&color=fff`;
+
+                    return (
+                      <div
+                        key={isObject ? speaker.id || idx : idx}
+                        className="p-4 border border-gray-200 rounded-2xl flex items-center gap-3 bg-white"
+                      >
+                        <img
+                          src={avatar}
+                          alt={name}
+                          className="w-12 h-12 rounded-full object-cover bg-gray-100"
+                        />
+                        <div>
+                          <h3 className="font-semibold text-sm text-gray-900">
+                            {name}
+                          </h3>
+                          <p className="text-xs text-gray-500">
+                            {role} {company ? `at ${company}` : ""}
+                          </p>
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
             )}

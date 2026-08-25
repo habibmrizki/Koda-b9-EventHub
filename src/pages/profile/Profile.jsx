@@ -56,11 +56,12 @@ function Profile() {
 
   const [formData, setFormData] = useState({ ...profileData });
 
-  useEffect(() => {
-    if (currentUser) {
-      setFormData({ ...currentUser });
-    }
-  }, [currentUser]);
+  // useEffect(() => {
+  //   if (currentUser) {
+  //     setFormData({ ...currentUser });
+  //   }
+  // }, [currentUser]);
+  <Profile key={currentUser?.email || "guest"} />;
 
   // Close modal pakai tombol ESC
   useEffect(() => {

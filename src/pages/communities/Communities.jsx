@@ -116,8 +116,11 @@ export default function Communities() {
 
   return (
     <div className="bg-black min-h-screen text-white">
-      <section className="py-12 md:py-20 px-4">
-        <div className="max-w-4xl mx-auto text-center">
+      <section className="relative overflow-hidden py-12 md:py-20 px-4">
+        {/* Ambient Orange Glow */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[350px] bg-orange-600/20 blur-[120px] rounded-full pointer-events-none" />
+
+        <div className="relative z-10 max-w-4xl mx-auto text-center">
           <div className="px-3.5 py-1.5 mb-6 bg-[#FF5F221A] border border-[#FF5F2233] w-fit mx-auto text-orange-500 font-medium text-xs font-inter rounded-full">
             Discover · Connect · Participate
           </div>
@@ -141,7 +144,6 @@ export default function Communities() {
           </div>
         </div>
       </section>
-
       <section className="bg-gray-50 text-gray-900 min-h-screen py-8 px-4 md:px-8 lg:px-12 rounded-t-3xl">
         <div className="max-w-7xl mx-auto space-y-6">
           <div className="flex flex-wrap items-center gap-3 border-b border-gray-200/80 pb-4">
