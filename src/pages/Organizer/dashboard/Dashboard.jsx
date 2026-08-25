@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 import {
   Calendar,
   Users,
@@ -17,16 +18,38 @@ const Dashboard = () => {
   const chartRef = useRef(null);
   const chartInstanceRef = useRef(null);
 
+  const events = useSelector((state) => state.data?.events || []);
+
+  const getEventData = (event) => {
+    const registered = event.tickets?.registered ?? event.attendees ?? 0;
+    const capacity = event.tickets?.capacity ?? event.capacity ?? 100;
+    const image =
+      event.media?.thumbnail_url ||
+      event.image ||
+      "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5";
+
+    // Format tanggal dan lokasi
+    let dateLoc = event.dateLocation;
+    if (!dateLoc && event.schedule?.date) {
+      const city = event.location?.city || "WIB";
+      dateLoc = `${event.schedule.date} · ${city}`;
+    }
+
+    return { registered, capacity, image, dateLoc };
+  };
+
   const stats = [
     {
       title: "TOTAL EVENTS",
-      value: "2",
+      value: events.length.toString(),
       subtext: "All time",
       icon: Calendar,
     },
     {
       title: "TOTAL ATTENDEES",
-      value: "103",
+      value: events
+        .reduce((acc, curr) => acc + getEventData(curr).registered, 0)
+        .toLocaleString(),
       subtext: "Across all events",
       icon: Users,
     },
@@ -44,44 +67,21 @@ const Dashboard = () => {
     },
   ];
 
-  const events = [
-    {
-      id: 1,
-      title: "Go Concurrency Workshop",
-      dateLocation: "Aug 22, 2026 · Bandung",
-      attendees: 48,
-      capacity: 100,
-      status: "Active",
-      image:
-        "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=300&q=80",
-    },
-    {
-      id: 2,
-      title: "Kubernetes Workshop",
-      dateLocation: "Sep 12, 2026 · Jakarta",
-      attendees: 55,
-      capacity: 80,
-      status: "Active",
-      image:
-        "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=300&q=80",
-    },
-  ];
-
-  const chartData = [
-    { month: "Mar", value: 21 },
-    { month: "Apr", value: 38 },
-    { month: "May", value: 34 },
-    { month: "Jun", value: 56, active: true },
-    { month: "Jul", value: 29 },
-    { month: "Aug", value: 48 },
-  ];
-
   useEffect(() => {
     if (!chartRef.current) return;
 
     if (chartInstanceRef.current) {
       chartInstanceRef.current.destroy();
     }
+
+    const chartData = [
+      { month: "Mar", value: 21 },
+      { month: "Apr", value: 38 },
+      { month: "May", value: 34 },
+      { month: "Jun", value: 56, active: true },
+      { month: "Jul", value: 29 },
+      { month: "Aug", value: 48 },
+    ];
 
     const ctx = chartRef.current.getContext("2d");
 
@@ -214,7 +214,6 @@ const Dashboard = () => {
       }
     };
   }, []);
-
   return (
     <div className="min-h-screen bg-gray-50/50 p-6 font-sans text-gray-800">
       {/* Header Section */}
@@ -227,7 +226,6 @@ const Dashboard = () => {
             Manage your events and track performance.
           </p>
         </div>
-        {/* Navigasi ke Halaman Create Event */}
         <button
           onClick={() => navigate("/organizer/create-event")}
           className="flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg font-medium text-sm transition-colors shadow-sm cursor-pointer"
@@ -268,70 +266,72 @@ const Dashboard = () => {
         <div className="lg:col-span-2 space-y-4">
           <h2 className="text-lg font-bold text-gray-800 mb-4">Your Events</h2>
 
-          {events.map((event) => {
-            const percentage = Math.round(
-              (event.attendees / event.capacity) * 100,
-            );
-            return (
-              <div
-                key={event.id}
-                className="bg-white p-5 rounded-xl border border-gray-100 shadow-sm space-y-4"
-              >
-                <div className="flex items-start justify-between gap-4">
-                  <div className="flex items-start gap-4">
-                    <img
-                      src={event.image}
-                      alt={event.title}
-                      className="w-16 h-16 rounded-lg object-cover shrink-0"
-                    />
-                    <div>
-                      <h3 className="font-semibold text-gray-900 text-base">
-                        {event.title}
-                      </h3>
-                      <p className="text-xs text-gray-500 mt-1">
-                        {event.dateLocation}
-                      </p>
-                      <p className="text-xs text-gray-500 mt-1">
-                        {event.attendees} attendees
-                      </p>
+          {events.length === 0 ? (
+            <div className="bg-white p-8 rounded-xl border border-gray-100 text-center text-gray-400 text-xs">
+              Belum ada event yang dibuat. Silakan klik "Create Event" di atas.
+            </div>
+          ) : (
+            events.map((event) => {
+              const { registered, capacity, image, dateLoc } =
+                getEventData(event);
+              const percentage = Math.round((registered / capacity) * 100);
+
+              return (
+                <div
+                  key={event.id}
+                  className="bg-white p-5 rounded-xl border border-gray-100 shadow-sm space-y-4"
+                >
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="flex items-start gap-4">
+                      <img
+                        src={image}
+                        alt={event.title}
+                        className="w-16 h-16 rounded-lg object-cover shrink-0"
+                      />
+                      <div>
+                        <h3 className="font-semibold text-gray-900 text-base">
+                          {event.title}
+                        </h3>
+                        <p className="text-xs text-gray-500 mt-1">{dateLoc}</p>
+                        <p className="text-xs text-gray-500 mt-1">
+                          {registered} attendees
+                        </p>
+                      </div>
+                    </div>
+                    <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-600 border border-emerald-100">
+                      {event.status || "Active"}
+                    </span>
+                  </div>
+
+                  <div className="space-y-1">
+                    <div className="flex justify-end text-xs text-gray-500 font-medium">
+                      {capacity} capacity
+                    </div>
+                    <div className="w-full bg-gray-100 h-2 rounded-full overflow-hidden">
+                      <div
+                        className="bg-emerald-500 h-full rounded-full transition-all duration-300"
+                        style={{ width: `${Math.min(percentage, 100)}%` }}
+                      />
                     </div>
                   </div>
-                  <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-600 border border-emerald-100">
-                    {event.status}
-                  </span>
-                </div>
 
-                <div className="space-y-1">
-                  <div className="flex justify-end text-xs text-gray-500 font-medium">
-                    {event.capacity} capacity
-                  </div>
-                  <div className="w-full bg-gray-100 h-2 rounded-full overflow-hidden">
-                    <div
-                      className="bg-emerald-500 h-full rounded-full transition-all duration-300"
-                      style={{ width: `${percentage}%` }}
-                    />
+                  <div className="flex items-center gap-3 pt-2">
+                    <button
+                      // onClick={() => navigate(`/events/edit/${event.id}`)}
+                      className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-gray-700 bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded-md transition-colors cursor-pointer"
+                    >
+                      <Pencil size={13} />
+                      Edit
+                    </button>
+                    <button className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-gray-700 bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded-md transition-colors cursor-pointer">
+                      <UserCheck size={13} />
+                      {registered} attendees
+                    </button>
                   </div>
                 </div>
-
-                <div className="flex items-center gap-3 pt-2">
-                  <button
-                    onClick={() => navigate(`/events/edit/${event.id}`)}
-                    className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-gray-700 bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded-md transition-colors cursor-pointer"
-                  >
-                    <Pencil size={13} />
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => navigate(`/events/${event.id}/attendees`)}
-                    className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-gray-700 bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded-md transition-colors cursor-pointer"
-                  >
-                    <UserCheck size={13} />
-                    {event.attendees} attendees
-                  </button>
-                </div>
-              </div>
-            );
-          })}
+              );
+            })
+          )}
         </div>
 
         {/* Right Column */}
@@ -353,7 +353,6 @@ const Dashboard = () => {
             <h3 className="font-semibold text-gray-800 text-sm mb-3">
               Quick Actions
             </h3>
-            {/* Navigasi ke Halaman Create Event  */}
             <button
               onClick={() => navigate("/organizer/create-event")}
               className="w-full flex items-center justify-center gap-2 bg-orange-500 hover:bg-orange-600 text-white py-2.5 rounded-lg font-medium text-sm transition-colors shadow-sm cursor-pointer"
@@ -375,27 +374,30 @@ const Dashboard = () => {
               Upcoming Events
             </h3>
             <div className="space-y-3">
-              {events.map((event) => (
-                <div
-                  key={event.id}
-                  className="flex items-center justify-between text-xs"
-                >
-                  <div className="flex gap-2 items-center">
-                    <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0" />
-                    <div>
-                      <p className="font-semibold text-gray-800">
-                        {event.title}
-                      </p>
-                      <p className="text-gray-400">
-                        {event.dateLocation.split("·")[0].trim()}
-                      </p>
+              {events.map((event) => {
+                const { registered, capacity, dateLoc } = getEventData(event);
+                return (
+                  <div
+                    key={event.id}
+                    className="flex items-center justify-between text-xs"
+                  >
+                    <div className="flex gap-2 items-center">
+                      <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0" />
+                      <div>
+                        <p className="font-semibold text-gray-800">
+                          {event.title}
+                        </p>
+                        <p className="text-gray-400">
+                          {dateLoc?.split("·")[0]?.trim() || "TBD"}
+                        </p>
+                      </div>
                     </div>
+                    <span className="text-gray-500 font-medium">
+                      {registered}/{capacity}
+                    </span>
                   </div>
-                  <span className="text-gray-500 font-medium">
-                    {event.attendees}/{event.capacity}
-                  </span>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         </div>
