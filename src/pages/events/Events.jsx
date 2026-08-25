@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useCallback } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { FiSearch, FiSliders } from "react-icons/fi";
@@ -53,11 +53,8 @@ export default function Events() {
   const selectedSort = searchParams.get("sort") || "Upcoming";
 
   const searchQuery = searchParams.get("search") || "";
-  const [searchInput, setSearchInput] = useState(searchQuery);
 
-  useEffect(() => {
-    setSearchInput(searchQuery);
-  }, [searchQuery]);
+  const [searchInput, setSearchInput] = useState(searchQuery);
 
   // Handler Multi-select Kategori
   const toggleCategory = (category) => {
@@ -88,15 +85,18 @@ export default function Events() {
     setSearchParams(newParams, { replace: true });
   };
 
-  const updateParam = (key, value, defaultValue) => {
-    const newParams = new URLSearchParams(searchParams);
-    if (!value || value === defaultValue) {
-      newParams.delete(key);
-    } else {
-      newParams.set(key, value);
-    }
-    setSearchParams(newParams, { replace: true });
-  };
+  const updateParam = useCallback(
+    (key, value, defaultValue) => {
+      const newParams = new URLSearchParams(searchParams);
+      if (!value || value === defaultValue) {
+        newParams.delete(key);
+      } else {
+        newParams.set(key, value);
+      }
+      setSearchParams(newParams, { replace: true });
+    },
+    [searchParams, setSearchParams],
+  );
 
   // Debounce Search
   useEffect(() => {
@@ -106,90 +106,70 @@ export default function Events() {
       }
     }, 300);
     return () => clearTimeout(timer);
-  }, [searchInput]);
+  }, [searchInput, searchQuery, updateParam]);
 
-  // Filtering Logic dari State Redux
+  // Filtering & Sorting Logic
   const filteredEvents = useMemo(() => {
-    return (
-      (events || [])
-        .filter((event) => {
-          const query = searchInput.toLowerCase().trim();
-          if (query) {
-            const titleMatch = event.title?.toLowerCase().includes(query);
-            const overviewMatch = event.overview?.toLowerCase().includes(query);
-            const cityMatch = event.location?.city
-              ?.toLowerCase()
-              .includes(query);
-            if (!titleMatch && !overviewMatch && !cityMatch) return false;
+    return (events || [])
+      .filter((event) => {
+        const query = searchInput.toLowerCase().trim();
+        if (query) {
+          const titleMatch = event.title?.toLowerCase().includes(query);
+          const overviewMatch = event.overview?.toLowerCase().includes(query);
+          const cityMatch = event.location?.city?.toLowerCase().includes(query);
+          if (!titleMatch && !overviewMatch && !cityMatch) return false;
+        }
+
+        if (!selectedCategories.includes("All")) {
+          const matchesAnyCategory = selectedCategories.some((cat) => {
+            const catLower = cat.toLowerCase();
+            const matchTag =
+              Array.isArray(event.tags) &&
+              event.tags.some((tag) => tag.toLowerCase() === catLower);
+            const matchTitle = event.title?.toLowerCase().includes(catLower);
+            return matchTag || matchTitle;
+          });
+
+          if (!matchesAnyCategory) return false;
+        }
+
+        if (selectedLocation !== "All Locations") {
+          const locLower = selectedLocation.toLowerCase();
+          if (locLower === "online") {
+            const isOnline =
+              event.location?.type?.toLowerCase() === "online" ||
+              event.location?.city?.toLowerCase() === "online";
+            if (!isOnline) return false;
+          } else {
+            if (event.location?.city?.toLowerCase() !== locLower) return false;
           }
+        }
 
-          if (!selectedCategories.includes("All")) {
-            const matchesAnyCategory = selectedCategories.some((cat) => {
-              const catLower = cat.toLowerCase();
-              const matchTag =
-                Array.isArray(event.tags) &&
-                event.tags.some((tag) => tag.toLowerCase() === catLower);
-              const matchTitle = event.title?.toLowerCase().includes(catLower);
-              return matchTag || matchTitle;
-            });
+        return true;
+      })
+      .sort((a, b) => {
+        if (selectedSort === "Most Popular") {
+          return (b.tickets?.registered || 0) - (a.tickets?.registered || 0);
+        }
 
-            if (!matchesAnyCategory) return false;
-          }
+        if (selectedSort === "Almost Full") {
+          const percentageA =
+            (a.tickets?.registered || 0) / (a.tickets?.capacity || 1);
+          const percentageB =
+            (b.tickets?.registered || 0) / (b.tickets?.capacity || 1);
+          return percentageB - percentageA;
+        }
 
-          if (selectedLocation !== "All Locations") {
-            const locLower = selectedLocation.toLowerCase();
-            if (locLower === "online") {
-              const isOnline =
-                event.location?.type?.toLowerCase() === "online" ||
-                event.location?.city?.toLowerCase() === "online";
-              if (!isOnline) return false;
-            } else {
-              if (event.location?.city?.toLowerCase() !== locLower)
-                return false;
-            }
-          }
+        if (selectedSort === "Recently Added") {
+          return (b.id || "").localeCompare(a.id || "", undefined, {
+            numeric: true,
+          });
+        }
 
-          return true;
-        })
-        // .sort((a, b) => {
-        //   if (selectedSort === "Most Popular") {
-        //     return (b.tickets?.registered || 0) - (a.tickets?.registered || 0);
-        //   }
-        //   if (selectedSort === "Almost Full") {
-        //     const remainingA =
-        //       (a.tickets?.capacity || 0) - (a.tickets?.registered || 0);
-        //     const remainingB =
-        //       (b.tickets?.capacity || 0) - (b.tickets?.registered || 0);
-        //     return remainingA - remainingB;
-        //   }
-        //   return (
-        //     new Date(a.schedule?.date || 0) - new Date(b.schedule?.date || 0)
-        //   );
-        // });
-        .sort((a, b) => {
-          if (selectedSort === "Most Popular") {
-            return (b.tickets?.registered || 0) - (a.tickets?.registered || 0);
-          }
-
-          if (selectedSort === "Almost Full") {
-            const percentageA =
-              (a.tickets?.registered || 0) / (a.tickets?.capacity || 1);
-            const percentageB =
-              (b.tickets?.registered || 0) / (b.tickets?.capacity || 1);
-            return percentageB - percentageA;
-          }
-
-          if (selectedSort === "Recently Added") {
-            return (b.id || "").localeCompare(a.id || "", undefined, {
-              numeric: true,
-            });
-          }
-
-          return (
-            new Date(a.schedule?.date || 0) - new Date(b.schedule?.date || 0)
-          );
-        })
-    );
+        return (
+          new Date(a.schedule?.date || 0) - new Date(b.schedule?.date || 0)
+        );
+      });
   }, [events, searchInput, selectedCategories, selectedLocation, selectedSort]);
 
   return (
@@ -223,7 +203,7 @@ export default function Events() {
 
         {showFilters && (
           <div className="space-y-5 mb-8 animate-fadeIn">
-            {/* CATEGORY  */}
+            {/* CATEGORY */}
             <div>
               <span className="block text-[11px] font-bold text-gray-400 dark:text-gray-500 tracking-wider uppercase mb-2">
                 CATEGORY (Pilih lebih dari satu)
@@ -303,7 +283,6 @@ export default function Events() {
           {filteredEvents.length} events found
         </div>
 
-        {/* Handling Status Loading & Error Redux */}
         {loadingEvents ? (
           <div className="text-center py-16">
             <p className="text-orange-500 font-semibold animate-pulse">

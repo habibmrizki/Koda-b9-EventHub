@@ -43,7 +43,6 @@ const dataSlice = createSlice({
   reducers: {
     addEvent: (state, action) => {
       const form = action.payload;
-
       const newEvent = {
         id: `e-${Date.now()}`,
         community_id: form.community || "c1",
@@ -80,6 +79,7 @@ const dataSlice = createSlice({
           avatar_url:
             "https://images.unsplash.com/photo-1534528741775-53994a69daeb",
         },
+        created_at: new Date().toISOString().split("T")[0],
       };
 
       state.events.unshift(newEvent);
@@ -103,7 +103,6 @@ const dataSlice = createSlice({
       const index = registeredList.indexOf(eventId);
 
       if (index > -1) {
-        // Cancel Join
         state.userRegistrations[userEmail] = registeredList.filter(
           (id) => id !== eventId,
         );
@@ -112,7 +111,6 @@ const dataSlice = createSlice({
           event.tickets.is_full = false;
         }
       } else {
-        // Join Event
         if (event.tickets?.is_full) return;
         state.userRegistrations[userEmail].push(eventId);
         if (event.tickets) {
@@ -217,7 +215,7 @@ const dataSlice = createSlice({
       .addCase(fetchCommunities.rejected, (state, action) => {
         state.loadingCommunities = false;
         state.errorCommunities = action.payload;
-      }).addCase;
+      });
   },
 });
 

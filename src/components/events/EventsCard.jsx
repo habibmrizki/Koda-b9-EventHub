@@ -75,7 +75,6 @@ const EventCard = memo(function EventCard({ event }) {
   return (
     <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200/80 dark:border-gray-800 shadow-sm overflow-hidden flex flex-col justify-between hover:shadow-md transition-all duration-200">
       <div>
-        {/* Gunakan handleCardClick di sini */}
         <div
           onClick={handleCardClick}
           className="block relative group cursor-pointer"
