@@ -32,11 +32,20 @@ function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    // dispatch(logout());
-    // setProfileOpen(false);
-    // setMobileMenuOpen(false);
-    // navigate("/explore");
+  // const handleLogout = () => {
+  //   // dispatch(logout());
+  //   // setProfileOpen(false);
+  //   // setMobileMenuOpen(false);
+  //   // navigate("/explore");
+  //   setProfileOpen(false);
+  //   setMobileMenuOpen(false);
+  //   navigate("/explore", { replace: true });
+  //   dispatch(logout());
+  // };
+
+  const handleLogout = (e) => {
+    if (e) e.stopPropagation();
+
     setProfileOpen(false);
     setMobileMenuOpen(false);
     navigate("/explore", { replace: true });
@@ -245,7 +254,7 @@ function Header() {
                       <div className="py-1">
                         <button
                           type="button"
-                          onClick={handleLogout}
+                          onClick={(e) => handleLogout(e)}
                           className="w-full text-left px-4 py-2.5 font-inter text-sm font-medium text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition cursor-pointer"
                         >
                           Sign Out
