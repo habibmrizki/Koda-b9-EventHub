@@ -10,7 +10,7 @@ import Explore from "../pages/Explore/Explore";
 import Login from "../pages/auth/login/Login";
 import Register from "../pages/auth/register/Register";
 import ForgotPassword from "../pages/forgot-password/ForgotPassword";
-import ResetPassword from "../pages/reset-passwod/ResetPassword";
+import ResetPassword from "../pages/reset-password/ResetPassword";
 
 import Events from "../pages/events/Events";
 import EventDetail from "../pages/events-detail/EventDetail";
