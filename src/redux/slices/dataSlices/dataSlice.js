@@ -30,6 +30,7 @@ export const fetchCommunities = createAsyncThunk(
 const dataSlice = createSlice({
   name: "data",
   initialState: {
+    // suatu saat dipakai
     // events: eventsData,
     // communities: initialCommunitiesData,
     events: [],
@@ -47,7 +48,6 @@ const dataSlice = createSlice({
       const form = action.payload;
 
       let imageUrl = form.coverImage;
-      // Cegah QuotaExceededError pada LocalStorage akibat gambar Base64 terlalu besar
       if (
         !imageUrl ||
         (typeof imageUrl === "string" && imageUrl.length > 500000)
@@ -236,12 +236,9 @@ const dataSlice = createSlice({
       .addCase(fetchEvents.fulfilled, (state, action) => {
         state.loadingEvents = false;
 
-        // Jika state.events kosong (pertama kali aplikasi dibuka/belum ada cache)
         if (state.events.length === 0) {
           state.events = action.payload;
         } else {
-          // Jika sudah ada data (termasuk event baru buatan user),
-          // hanya tambahkan event dari JSON yang belum ada ID-nya di state
           const existingIds = new Set(state.events.map((e) => String(e.id)));
           const newJsonEvents = action.payload.filter(
             (e) => !existingIds.has(String(e.id)),
