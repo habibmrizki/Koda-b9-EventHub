@@ -34,9 +34,10 @@ const EventCard = memo(function EventCard({ event }) {
   const capacity = event?.tickets?.capacity || 1;
   const capacityPercentage = Math.min((registered / capacity) * 100, 100);
 
+  const isFull = Boolean(event?.tickets?.is_full || registered >= capacity);
+
   const getProgressBarColor = () => {
-    if (event?.tickets?.is_full || capacityPercentage >= 100)
-      return "bg-red-500";
+    if (isFull) return "bg-red-500";
     if (capacityPercentage > 75) return "bg-amber-500";
     return "bg-emerald-500";
   };
@@ -53,22 +54,27 @@ const EventCard = memo(function EventCard({ event }) {
   const handleJoin = (e) => {
     e.preventDefault();
     e.stopPropagation();
+
     if (isGuest) {
       openAuthModal(`/events/${event.id}`);
       return;
     }
-    if (!event?.id) return;
+
+    if (!event?.id || (!isRegistered && isFull)) return;
     dispatch(joinEvent({ eventId: event.id, userEmail }));
   };
 
   const handleBookmark = (e) => {
     e.preventDefault();
     e.stopPropagation();
+
     if (isGuest) {
       openAuthModal(`/events/${event.id}`);
       return;
     }
-    if (!event?.id) return;
+
+    // Jika event penuh, penghentian dibantu atribut disabled pada tombol
+    if (!event?.id || isFull) return;
     dispatch(toggleBookmarkEvent({ eventId: event.id, userEmail }));
   };
 
@@ -88,6 +94,11 @@ const EventCard = memo(function EventCard({ event }) {
               decoding="async"
             />
             <div className="absolute top-3 left-3 flex flex-wrap gap-1.5 pointer-events-none">
+              {isFull && (
+                <span className="px-2.5 py-1 bg-red-600 text-white font-bold text-[11px] rounded-full shadow-sm">
+                  Sold Out
+                </span>
+              )}
               {event.tags && event.tags.length > 0 ? (
                 event.tags.map((tag, idx) => (
                   <span
@@ -157,7 +168,7 @@ const EventCard = memo(function EventCard({ event }) {
               <span className="group-hover:hidden">✓ Registered</span>
               <span className="hidden group-hover:inline">Cancel Join</span>
             </button>
-          ) : event.tickets?.is_full ? (
+          ) : isFull ? (
             <button
               type="button"
               disabled
@@ -178,13 +189,24 @@ const EventCard = memo(function EventCard({ event }) {
           <button
             type="button"
             onClick={handleBookmark}
-            className="p-3 border border-gray-200 dark:border-gray-800 rounded-xl text-gray-500 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors flex items-center justify-center cursor-pointer"
+            disabled={isFull}
+            className={`p-3 border rounded-xl transition-colors flex items-center justify-center ${
+              isFull
+                ? "bg-gray-100 dark:bg-gray-800/50 text-gray-300 dark:text-gray-700 border-gray-200 dark:border-gray-800 cursor-not-allowed"
+                : "border-gray-200 dark:border-gray-800 text-gray-500 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer"
+            }`}
             aria-label="Bookmark event"
           >
             {isBookmarked ? (
-              <FaBookmark className="text-orange-600 dark:text-orange-500 text-sm" />
+              <FaBookmark
+                className={
+                  isFull
+                    ? "text-gray-400 dark:text-gray-600 text-sm"
+                    : "text-orange-600 dark:text-orange-500 text-sm"
+                }
+              />
             ) : (
-              <FaRegBookmark className="text-gray-400 text-sm" />
+              <FaRegBookmark className="text-sm" />
             )}
           </button>
         </div>
