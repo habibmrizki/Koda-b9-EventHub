@@ -72,13 +72,17 @@ const EventDetail = () => {
   const capacity = event.tickets?.capacity || 1;
   const capacityPercentage = Math.min((registered / capacity) * 100, 100);
 
+  const isFull = Boolean(event.tickets?.is_full || registered >= capacity);
+
   // Handler Join / Cancel Join
   const handleJoinToggle = () => {
+    if (!isRegistered && isFull) return;
     dispatch(joinEvent({ eventId: event.id, userEmail }));
   };
 
   // Handler Bookmark Toggle
   const handleBookmarkToggle = () => {
+    if (isFull) return;
     dispatch(toggleBookmarkEvent({ eventId: event.id, userEmail }));
   };
 
@@ -146,12 +150,12 @@ const EventDetail = () => {
               ))}
               <span
                 className={`px-3 py-1 font-medium text-xs rounded-full ${
-                  event.tickets?.is_full
+                  isFull
                     ? "bg-red-50 text-red-600"
                     : "bg-emerald-50 text-emerald-600"
                 }`}
               >
-                {event.tickets?.is_full ? "Full" : "Available"}
+                {isFull ? "Full" : "Available"}
               </span>
             </div>
 
@@ -310,7 +314,9 @@ const EventDetail = () => {
                 </div>
                 <div className="w-full bg-gray-100 h-2 rounded-full overflow-hidden mb-2">
                   <div
-                    className="h-full bg-emerald-500 rounded-full transition-all duration-300"
+                    className={`h-full rounded-full transition-all duration-300 ${
+                      isFull ? "bg-red-500" : "bg-emerald-500"
+                    }`}
                     style={{ width: `${capacityPercentage}%` }}
                   ></div>
                 </div>
@@ -330,7 +336,7 @@ const EventDetail = () => {
                   <span className="group-hover:hidden">✓ Registered</span>
                   <span className="hidden group-hover:inline">Cancel Join</span>
                 </button>
-              ) : event.tickets?.is_full ? (
+              ) : isFull ? (
                 <button
                   disabled
                   className="w-full py-3 px-4 bg-gray-200 text-gray-400 rounded-xl font-semibold text-sm cursor-not-allowed"
@@ -347,20 +353,29 @@ const EventDetail = () => {
                 </button>
               )}
 
-              {/* Action Buttons: Save & Share */}
+              {/* Action Buttons: Save (Disabled saat Penuh) & Share */}
               <div className="flex gap-2">
                 <button
                   type="button"
                   onClick={handleBookmarkToggle}
-                  className={`flex-1 py-2.5 border rounded-xl text-sm font-semibold transition cursor-pointer flex items-center justify-center gap-2 ${
-                    isBookmarked
-                      ? "border-orange-500 bg-orange-50 text-orange-600"
-                      : "border-gray-200 text-gray-700 hover:bg-gray-50"
+                  disabled={isFull}
+                  className={`flex-1 py-2.5 border rounded-xl text-sm font-semibold transition flex items-center justify-center gap-2 ${
+                    isFull
+                      ? "bg-gray-100 text-gray-300 border-gray-200 cursor-not-allowed"
+                      : isBookmarked
+                        ? "border-orange-500 bg-orange-50 text-orange-600 cursor-pointer"
+                        : "border-gray-200 text-gray-700 hover:bg-gray-50 cursor-pointer"
                   }`}
                 >
                   <Bookmark
                     size={16}
-                    className={isBookmarked ? "fill-orange-600" : ""}
+                    className={
+                      isFull
+                        ? "text-gray-300"
+                        : isBookmarked
+                          ? "fill-orange-600"
+                          : ""
+                    }
                   />
                   <span>{isBookmarked ? "Saved" : "Save"}</span>
                 </button>
