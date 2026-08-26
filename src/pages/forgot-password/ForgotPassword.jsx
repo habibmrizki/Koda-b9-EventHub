@@ -4,12 +4,16 @@ import { toast } from "react-toastify";
 
 function ForgotPassword() {
   const [email, setEmail] = useState("");
+  const [error, setError] = useState("");
   const navigate = useNavigate();
+
+  const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)+$/;
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
     if (!email.trim()) {
+      setError("Email tidak boleh kosong");
       toast.error("Email tidak boleh kosong!", {
         position: "top-center",
         autoClose: 1500,
@@ -17,14 +21,24 @@ function ForgotPassword() {
       return;
     }
 
-    toast.success("Link reset password telah dikirim ke email Anda!", {
+    if (!emailPattern.test(email)) {
+      setError("Format email tidak valid");
+      toast.error("Format email tidak valid!", {
+        position: "top-center",
+        autoClose: 1500,
+      });
+      return;
+    }
+
+    setError("");
+    toast.success("Kode verifikasi dikirim! Mengalihkan...", {
       position: "top-center",
-      autoClose: 1500,
+      autoClose: 1200,
     });
 
     setTimeout(() => {
-      navigate("/login", { replace: true });
-    }, 1800);
+      navigate("/reset-password", { state: { email } });
+    }, 1200);
   };
 
   return (
@@ -34,7 +48,7 @@ function ForgotPassword() {
           Reset your password
         </h2>
         <p className="font-inter font-normal text-sm mt-1 text-gray-600">
-          Enter your email and we'll send a link.
+          Enter your registered email to continue resetting your password.
         </p>
       </div>
 
@@ -49,13 +63,23 @@ function ForgotPassword() {
             Email Address
           </label>
           <input
-            className="px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent text-sm"
+            className={`px-3 py-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent text-sm transition-colors ${
+              error ? "border-red-500 bg-red-50" : "border-gray-300"
+            }`}
             type="email"
             id="email"
             placeholder="mail@example.com"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => {
+              setEmail(e.target.value);
+              if (error) setError("");
+            }}
           />
+          {error && (
+            <span className="text-red-600 text-xs font-inter font-medium mt-0.5">
+              {error}
+            </span>
+          )}
         </div>
 
         {/* Submit Button */}
@@ -81,3 +105,4 @@ function ForgotPassword() {
 }
 
 export default ForgotPassword;
+
