@@ -180,7 +180,7 @@ function LandingPage() {
       {/* Hero Section */}
       <section className="relative overflow-hidden py-12 md:py-20 px-4">
         {/* Orange Radial Glow Ambient Background */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[350px] bg-orange-600/20 blur-[120px] rounded-full pointer-events-none" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-150 h-87.5 bg-orange-600/20 blur-[120px] rounded-full pointer-events-none" />
 
         <div className="relative z-10 max-w-4xl mx-auto text-center">
           <div className="px-3.5 py-1.5 mb-6 bg-[#FF5F221A] border border-[#FF5F2233] w-fit mx-auto text-orange-500 font-medium text-xs font-inter rounded-full">
