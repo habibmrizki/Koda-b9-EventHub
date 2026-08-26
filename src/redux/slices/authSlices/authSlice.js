@@ -5,7 +5,6 @@ const initialState = {
   currentUser: null,
   status: "idle",
   error: null,
-  // Tambahkan state modal di sini
   isAuthModalOpen: false,
   authModalRedirectPath: null,
 };
