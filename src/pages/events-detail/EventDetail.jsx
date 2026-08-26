@@ -97,6 +97,7 @@ const EventDetail = () => {
     if (!commentText.trim()) return;
 
     const newComment = {
+      // eslint-disable-next-line react-hooks/purity
       id: `d-${Date.now()}`,
       user_id: currentUser?.id || "user-current",
       user_name: currentUser?.name || "Guest User",
@@ -105,9 +106,7 @@ const EventDetail = () => {
       created_at: "Just now",
     };
 
-    dispatch(
-      addEventDiscussion({ eventId: event.id, discussion: newComment })
-    );
+    dispatch(addEventDiscussion({ eventId: event.id, discussion: newComment }));
     setCommentText("");
   };
 
