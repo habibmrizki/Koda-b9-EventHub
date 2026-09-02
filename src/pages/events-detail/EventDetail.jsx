@@ -16,22 +16,22 @@ import {
   joinEvent,
   toggleBookmarkEvent,
   addEventDiscussion,
-} from "../../redux/slices/dataSlices/dataSlice";
+} from "../../redux/slices/dataSlices/eventSlice";
 import EventCard from "../../components/events/EventsCard";
+import useAuth from "../../hooks/useAuth";
 
 const EventDetail = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
 
-  // Ambil data User & Redux State
-  const currentUser = useSelector((state) => state.auth?.currentUser);
-  const userEmail = currentUser?.email || "guest";
+  // Ambil data User & Redux State via useAuth Hook
+  const { currentUser, userEmail } = useAuth();
 
   const {
-    events = [],
+    items: events = [],
     userRegistrations = {},
     userBookmarks = {},
-  } = useSelector((state) => state.data || {});
+  } = useSelector((state) => state.events || {});
 
   // Cari event spesifik dari Redux state
   const event = events.find((item) => String(item.id) === String(id));
@@ -100,17 +100,30 @@ const EventDetail = () => {
     e.preventDefault();
     if (!commentText.trim()) return;
 
+    const authorName =
+      currentUser?.fullName ||
+      currentUser?.name ||
+      currentUser?.email?.split("@")[0] ||
+      "Guest User";
+    const authorAvatar =
+      currentUser?.avatarUrl ||
+      currentUser?.avatar ||
+      currentUser?.avatar_url ||
+      null;
+
     const newComment = {
       // eslint-disable-next-line react-hooks/purity
       id: `d-${Date.now()}`,
-      user_id: currentUser?.id || "user-current",
-      user_name: currentUser?.name || "Guest User",
-      user_avatar: currentUser?.avatar || null,
+      user_id: currentUser?.email || currentUser?.id || "user-current",
+      user_name: authorName,
+      user_avatar: authorAvatar,
       message: commentText,
       created_at: "Just now",
     };
 
-    dispatch(addEventDiscussion({ eventId: event.id, discussion: newComment }));
+    dispatch(
+      addEventDiscussion({ eventId: event.id, discussion: newComment }),
+    );
     setCommentText("");
   };
 
@@ -132,7 +145,12 @@ const EventDetail = () => {
             {/* Banner Event */}
             <div className="w-full h-72 sm:h-96 rounded-2xl overflow-hidden bg-gray-100">
               <img
-                src={event.media?.thumbnail_url}
+                src={
+                  event.coverImage ||
+                  event.image ||
+                  event.media?.cover_url ||
+                  event.media?.thumbnail_url
+                }
                 alt={event.title}
                 className="w-full h-full object-cover"
               />
@@ -259,9 +277,24 @@ const EventDetail = () => {
                 onSubmit={handleCommentSubmit}
                 className="flex gap-3 items-center pt-2"
               >
-                <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center font-bold text-gray-600 shrink-0">
-                  {currentUser?.name ? currentUser.name.charAt(0) : "G"}
-                </div>
+                {currentUser?.avatarUrl || currentUser?.avatar ? (
+                  <img
+                    src={currentUser.avatarUrl || currentUser.avatar}
+                    alt={currentUser.fullName || "User Avatar"}
+                    className="w-10 h-10 rounded-full object-cover shrink-0"
+                  />
+                ) : (
+                  <div className="w-10 h-10 rounded-full bg-orange-500 text-white flex items-center justify-center font-bold text-sm shrink-0">
+                    {(
+                      currentUser?.fullName ||
+                      currentUser?.name ||
+                      currentUser?.email ||
+                      "G"
+                    )
+                      .charAt(0)
+                      .toUpperCase()}
+                  </div>
+                )}
                 <div className="relative flex-1">
                   <input
                     type="text"
