@@ -1,7 +1,9 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import eventsData from "../../../data/Events.json";
 import initialCommunitiesData from "../../../data/Communities.json";
-import { logout } from "../authSlices/authSlice";
+
+const defaultFallback =
+  "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=800&q=80";
 
 export const fetchEvents = createAsyncThunk(
   "data/fetchEvents",
@@ -30,9 +32,6 @@ export const fetchCommunities = createAsyncThunk(
 const dataSlice = createSlice({
   name: "data",
   initialState: {
-    // suatu saat dipakai
-    // events: eventsData,
-    // communities: initialCommunitiesData,
     events: [],
     communities: [],
     userRegistrations: {},
@@ -45,69 +44,66 @@ const dataSlice = createSlice({
   },
   reducers: {
     addEvent: (state, action) => {
-      const form = action.payload;
+      const newEventData = action.payload;
 
-      let imageUrl = form.coverImage;
-      if (
-        !imageUrl ||
-        (typeof imageUrl === "string" && imageUrl.length > 500000)
-      ) {
-        imageUrl =
-          "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=800&q=80";
-      }
+      const finalImageUrl =
+        newEventData.coverImage && newEventData.coverImage.trim() !== ""
+          ? newEventData.coverImage
+          : defaultFallback;
 
       const newEvent = {
         id: `e-${Date.now()}`,
-        community_id: form.community || "c1",
-        title: form.title || "Untitled Event",
-        slug: (form.title || "untitled-event")
+        community_id: newEventData.community || "c1",
+        title: newEventData.title || "Untitled Event",
+        slug: (newEventData.title || "untitled-event")
           .toLowerCase()
           .replace(/[^a-z0-9]+/g, "-"),
-        overview: form.description || "",
-        description: form.description || "",
-
-        // Kompatibilitas gambar Dashboard & EventsCard
-        image: imageUrl,
+        overview: newEventData.description || "",
+        description: newEventData.description || "",
+        image: finalImageUrl,
+        coverImage: finalImageUrl,
         media: {
-          thumbnail_url: imageUrl,
-          cover_url: imageUrl,
+          thumbnail_url: finalImageUrl,
+          cover_url: finalImageUrl,
         },
 
-        // Kompatibilitas tanggal dan lokasi Dashboard & EventsCard
-        dateLocation: `${form.eventDate || "TBD"} · ${form.location || "Online"}`,
+        dateLocation: `${newEventData.eventDate || "TBD"} · ${newEventData.location || "Online"}`,
         schedule: {
-          date: form.eventDate || "",
-          start_time: form.startTime || "09:00",
-          end_time: form.endTime || "17:00",
+          date: newEventData.eventDate || "",
+          start_time: newEventData.startTime || "09:00",
+          end_time: newEventData.endTime || "17:00",
           timezone: "WIB",
         },
         location: {
-          type: form.format === "In Person" ? "offline" : "online",
-          city: form.format === "Online" ? "Online" : form.location || "Online",
-          address: form.format === "In Person" ? form.location : null,
+          type: newEventData.format === "In Person" ? "offline" : "online",
+          city:
+            newEventData.format === "Online"
+              ? "Online"
+              : newEventData.location || "Online",
+          address:
+            newEventData.format === "In Person" ? newEventData.location : null,
         },
 
-        // Kompatibilitas pendaftaran & kapasitas
         attendees: 0,
-        capacity: parseInt(form.capacity, 10) || 100,
+        attendees_count: 0,
+        capacity: parseInt(newEventData.capacity, 10) || 100,
         tickets: {
-          capacity: parseInt(form.capacity, 10) || 100,
+          capacity: parseInt(newEventData.capacity, 10) || 100,
           registered: 0,
           is_full: false,
         },
 
-        // Kategori & Pembicara
         tags:
-          Array.isArray(form.categories) && form.categories.length > 0
-            ? form.categories
+          Array.isArray(newEventData.categories) &&
+          newEventData.categories.length > 0
+            ? newEventData.categories
             : ["Technology"],
-        speakers: form.speakers || [],
-
+        speakers: newEventData.speakers || [],
         status: "Active",
         organizer: {
           id: "u-myuser",
           name: "User Organizer",
-          community_name: form.community || "General Community",
+          community_name: newEventData.community || "General Community",
           avatar_url:
             "https://images.unsplash.com/photo-1534528741775-53994a69daeb",
         },
@@ -117,6 +113,73 @@ const dataSlice = createSlice({
       state.events.unshift(newEvent);
     },
 
+    updateEvent: (state, action) => {
+      const updatedData = action.payload;
+      const index = state.events.findIndex(
+        (e) => String(e.id) === String(updatedData.id),
+      );
+
+      if (index !== -1) {
+        const currentEvent = state.events[index];
+
+        const finalImageUrl =
+          updatedData.coverImage && updatedData.coverImage.trim() !== ""
+            ? updatedData.coverImage
+            : currentEvent.coverImage ||
+              currentEvent.image ||
+              currentEvent.media?.cover_url ||
+              defaultFallback;
+
+        state.events[index] = {
+          ...currentEvent,
+          title: updatedData.title || currentEvent.title,
+          overview: updatedData.description || currentEvent.overview,
+          description: updatedData.description || currentEvent.description,
+
+          image: finalImageUrl,
+          coverImage: finalImageUrl,
+          media: {
+            ...currentEvent.media,
+            thumbnail_url: finalImageUrl,
+            cover_url: finalImageUrl,
+          },
+
+          dateLocation: `${updatedData.eventDate || "TBD"} · ${updatedData.location || "Online"}`,
+          schedule: {
+            ...currentEvent.schedule,
+            date: updatedData.eventDate || currentEvent.schedule?.date || "",
+            start_time:
+              updatedData.startTime ||
+              currentEvent.schedule?.start_time ||
+              "09:00",
+            end_time:
+              updatedData.endTime || currentEvent.schedule?.end_time || "17:00",
+          },
+          location: {
+            type: updatedData.format === "In Person" ? "offline" : "online",
+            city:
+              updatedData.format === "Online"
+                ? "Online"
+                : updatedData.location || "Online",
+            address:
+              updatedData.format === "In Person" ? updatedData.location : null,
+          },
+          capacity:
+            parseInt(updatedData.capacity, 10) || currentEvent.capacity || 100,
+          tickets: {
+            ...currentEvent.tickets,
+            capacity: parseInt(updatedData.capacity, 10) || 100,
+          },
+          tags:
+            Array.isArray(updatedData.categories) &&
+            updatedData.categories.length > 0
+              ? updatedData.categories
+              : currentEvent.tags,
+          speakers: updatedData.speakers || currentEvent.speakers,
+        };
+      }
+    },
+
     joinEvent: (state, action) => {
       const payload =
         typeof action.payload === "object" && action.payload !== null
@@ -124,7 +187,7 @@ const dataSlice = createSlice({
           : { eventId: action.payload, userEmail: "guest" };
 
       const { eventId, userEmail } = payload;
-      const event = state.events.find((e) => e.id === eventId);
+      const event = state.events.find((e) => String(e.id) === String(eventId));
       if (!event) return;
 
       if (!state.userRegistrations[userEmail]) {
@@ -163,7 +226,7 @@ const dataSlice = createSlice({
           : { eventId: action.payload, userEmail: "guest" };
 
       const { eventId, userEmail } = payload;
-      const event = state.events.find((e) => e.id === eventId);
+      const event = state.events.find((e) => String(e.id) === String(eventId));
       if (!event) return;
 
       if (!state.userBookmarks[userEmail]) {
@@ -189,7 +252,9 @@ const dataSlice = createSlice({
           : { communityId: action.payload, userEmail: "guest" };
 
       const { communityId, userEmail } = payload;
-      const community = state.communities.find((c) => c.id === communityId);
+      const community = state.communities.find(
+        (c) => String(c.id) === String(communityId),
+      );
       if (!community) return;
 
       if (!state.userCommunities[userEmail]) {
@@ -224,18 +289,12 @@ const dataSlice = createSlice({
 
   extraReducers: (builder) => {
     builder
-      .addCase(logout, (state) => {
-        state.userRegistrations = {};
-        state.userBookmarks = {};
-        state.userCommunities = {};
-      })
       .addCase(fetchEvents.pending, (state) => {
         state.loadingEvents = true;
         state.errorEvents = null;
       })
       .addCase(fetchEvents.fulfilled, (state, action) => {
         state.loadingEvents = false;
-
         if (state.events.length === 0) {
           state.events = action.payload;
         } else {
@@ -269,6 +328,7 @@ const dataSlice = createSlice({
 
 export const {
   addEvent,
+  updateEvent,
   joinEvent,
   toggleJoinCommunity,
   toggleBookmarkEvent,
