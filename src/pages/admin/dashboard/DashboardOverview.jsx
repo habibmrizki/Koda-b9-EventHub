@@ -1,61 +1,94 @@
+import { useSelector } from "react-redux";
 import { LuUsers, LuCalendar, LuFlag, LuUserCheck } from "react-icons/lu";
 
 export default function DashboardOverview() {
+  const registeredUsers = useSelector(
+    (state) => state.users?.registeredUsers || [],
+  );
+  const events = useSelector((state) => state.events?.items || []);
+  const communities = useSelector((state) => state.communities?.items || []);
+
+  const totalUsers = registeredUsers.length;
+  const totalEvents = events.length;
+  const totalCommunities = communities.length;
+
+  const avgFillRate = (() => {
+    if (events.length === 0) return 0;
+
+    let totalRegistered = 0;
+    let totalCapacity = 0;
+
+    events.forEach((evt) => {
+      totalRegistered += evt.tickets?.registered || evt.attendees || 0;
+      totalCapacity += evt.tickets?.capacity || evt.capacity || 100;
+    });
+
+    if (totalCapacity === 0) return 0;
+    return Math.min(100, Math.round((totalRegistered / totalCapacity) * 100));
+  })();
+
   const stats = [
     {
       title: "TOTAL USERS",
-      value: "12,841",
-      desc: "+284 this month",
+      value: totalUsers.toLocaleString(),
+      desc: `+${totalUsers} registered`,
       icon: LuUsers,
     },
     {
       title: "TOTAL EVENTS",
-      value: "12",
-      desc: "8 upcoming",
+      value: totalEvents.toString(),
+      desc: `${events.filter((e) => !e.tickets?.is_full).length} active`,
       icon: LuCalendar,
     },
     {
       title: "COMMUNITIES",
-      value: "8",
+      value: totalCommunities.toString(),
       desc: "All active",
       icon: LuUserCheck,
     },
     {
       title: "AVG FILL RATE",
-      value: "74%",
+      value: `${avgFillRate}%`,
       desc: "Across all events",
       icon: LuFlag,
     },
   ];
+
+  const latestUser = registeredUsers[registeredUsers.length - 1];
+  const latestEvent = events[0];
 
   const activities = [
     {
       id: 1,
       icon: LuUsers,
       color: "text-emerald-500",
-      text: "284 new users registered this month",
-      time: "Today",
+      text: latestUser
+        ? `${latestUser.fullName} baru saja mendaftar`
+        : "Belum ada pendaftaran baru",
+      time: " Terbaru",
     },
     {
       id: 2,
       icon: LuCalendar,
       color: "text-blue-500",
-      text: '"AI Product Design Summit" reached 234 registrations',
-      time: "2h ago",
+      text: latestEvent
+        ? `"${latestEvent.title}" memiliki ${latestEvent.tickets?.registered || 0} pendaftar`
+        : "Belum ada event aktif",
+      time: "Terbaru",
     },
     {
       id: 3,
       icon: LuFlag,
       color: "text-orange-500",
-      text: "3 new organizer applications received",
-      time: "5h ago",
+      text: `${totalEvents} total event telah dibuat di platform`,
+      time: "System",
     },
     {
       id: 4,
-      icon: LuUsers,
+      icon: LuUserCheck,
       color: "text-emerald-500",
-      text: "Jakarta AI & ML Club crossed 2,000 members",
-      time: "1d ago",
+      text: `${totalCommunities} komunitas aktif terhubung`,
+      time: "System",
     },
   ];
 
