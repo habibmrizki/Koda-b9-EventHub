@@ -1,7 +1,20 @@
 import { useState } from "react";
+import useAuth from "../../hooks/useAuth";
 
 export default function TabDiscussion({ discussions = [], onAddDiscussion }) {
   const [inputText, setInputText] = useState("");
+  const { currentUser } = useAuth();
+
+  const userName =
+    currentUser?.fullName ||
+    currentUser?.name ||
+    currentUser?.email?.split("@")[0] ||
+    "Guest User";
+
+  const userAvatar =
+    currentUser?.avatarUrl ||
+    currentUser?.avatar ||
+    currentUser?.avatar_url;
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -17,11 +30,17 @@ export default function TabDiscussion({ discussions = [], onAddDiscussion }) {
     <div className="space-y-4 max-w-4xl">
       {/* Input Form */}
       <form onSubmit={handleSubmit} className="flex items-center gap-3">
-        <img
-          src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&auto=format&fit=crop&q=80"
-          alt="Current User Avatar"
-          className="w-9 h-9 rounded-full object-cover shrink-0"
-        />
+        {userAvatar ? (
+          <img
+            src={userAvatar}
+            alt={userName}
+            className="w-9 h-9 rounded-full object-cover shrink-0"
+          />
+        ) : (
+          <div className="w-9 h-9 rounded-full bg-orange-500 text-white flex items-center justify-center font-bold text-xs shrink-0">
+            {userName.charAt(0).toUpperCase()}
+          </div>
+        )}
         <div className="relative flex-1">
           <input
             type="text"
@@ -43,16 +62,17 @@ export default function TabDiscussion({ discussions = [], onAddDiscussion }) {
       <div className="space-y-3">
         {discussions.map((item, index) => (
           <div key={item.id || index} className="flex items-start gap-3">
-            <img
-              src={
-                item.avatar ||
-                `https://ui-avatars.com/api/?name=${encodeURIComponent(
-                  item.author || "User",
-                )}`
-              }
-              alt={item.author}
-              className="w-9 h-9 rounded-full object-cover shrink-0 mt-1"
-            />
+            {item.avatar ? (
+              <img
+                src={item.avatar}
+                alt={item.author}
+                className="w-9 h-9 rounded-full object-cover shrink-0 mt-1"
+              />
+            ) : (
+              <div className="w-9 h-9 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center font-bold text-xs shrink-0 mt-1">
+                {(item.author || "U").charAt(0).toUpperCase()}
+              </div>
+            )}
             <div className="flex-1 bg-white border border-gray-100 rounded-2xl p-4 shadow-sm">
               <div className="flex items-center gap-2 mb-1">
                 <span className="font-semibold text-sm text-gray-900">
