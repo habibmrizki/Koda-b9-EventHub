@@ -6,7 +6,8 @@ import {
   fetchEvents,
   joinEvent,
   toggleBookmarkEvent,
-} from "../../redux/slices/dataSlices/dataSlice";
+} from "../../redux/slices/dataSlices/eventSlice";
+import useAuth from "../../hooks/useAuth";
 
 const EventListContent = ({ list, userEmail }) => {
   const navigate = useNavigate();
@@ -53,7 +54,12 @@ const EventListContent = ({ list, userEmail }) => {
           >
             <div className="relative h-40 w-full overflow-hidden bg-gray-100 dark:bg-gray-800">
               <img
-                src={item.media?.thumbnail_url}
+                src={
+                  item.coverImage ||
+                  item.image ||
+                  item.media?.thumbnail_url ||
+                  item.media?.cover_url
+                }
                 alt={item.title}
                 className="w-full h-full object-cover"
               />
@@ -165,14 +171,13 @@ const MyEvents = () => {
   const dispatch = useDispatch();
   const { tab = "upcoming" } = useParams();
 
-  const currentUser = useSelector((state) => state.auth?.currentUser);
-  const userEmail = currentUser?.email || "guest";
+  const { userEmail } = useAuth();
 
   const {
-    events = [],
+    items: events = [],
     userRegistrations = {},
     userBookmarks = {},
-  } = useSelector((state) => state.data || {});
+  } = useSelector((state) => state.events || {});
 
   // useEffect(() => {
   //   if (events.length === 0) {
