@@ -2,19 +2,18 @@ import { memo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { FaUsers, FaRegCalendar, FaCheck } from "react-icons/fa";
-import { toggleJoinCommunity } from "../../redux/slices/dataSlices/dataSlice";
-import { useAuth } from "../../context/AuthContext";
+import { toggleJoinCommunity } from "../../redux/slices/dataSlices/communitiesSlice";
+import useAuth from "../../hooks/useAuth";
 
 const CommunityCard = memo(function CommunityCard({ community }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { openAuthModal } = useAuth();
 
-  const currentUser = useSelector((state) => state.auth?.currentUser);
-  const isGuest = !currentUser;
-  const userEmail = currentUser?.email || "guest";
+  const { isGuest, userEmail, openAuthModal } = useAuth();
 
-  const { userCommunities = {} } = useSelector((state) => state.data || {});
+  const { userCommunities = {} } = useSelector(
+    (state) => state.communities || {},
+  );
 
   // Cek apakah user saat ini sudah join ke komunitas ini
   const isJoined = (userCommunities[userEmail] || []).includes(community?.id);
@@ -43,8 +42,11 @@ const CommunityCard = memo(function CommunityCard({ community }) {
   };
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-200 shadow-xs overflow-hidden flex flex-col justify-between hover:shadow-md transition">
-      <div onClick={handleCardClick} className="block cursor-pointer">
+    <div className="bg-white rounded-2xl border border-gray-200 shadow-xs overflow-hidden flex flex-col justify-between h-full hover:shadow-md transition">
+      <div
+        onClick={handleCardClick}
+        className="block cursor-pointer flex-1 flex flex-col justify-between"
+      >
         <div className="relative h-40 w-full bg-gray-100">
           <img
             src={community.cover_image}
@@ -66,8 +68,7 @@ const CommunityCard = memo(function CommunityCard({ community }) {
           <p className="text-gray-500 text-xs line-clamp-2 mb-4 leading-relaxed">
             {community.description}
           </p>
-
-          <div className="flex flex-wrap gap-1.5 mb-4">
+          <div className="flex flex-wrap gap-1.5 mb-4 min-h-13 items-start">
             {community.categories?.map((cat, idx) => (
               <span
                 key={idx}
@@ -85,18 +86,18 @@ const CommunityCard = memo(function CommunityCard({ community }) {
               </span>
             ))}
           </div>
+        </div>
 
-          <div className="flex items-center gap-4 text-xs text-gray-500 font-inter">
-            <div className="flex items-center gap-1.5">
-              <FaUsers className="text-gray-400 shrink-0" />
-              <span>
-                {(community.members_count || 0).toLocaleString()} members
-              </span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <FaRegCalendar className="text-gray-400 shrink-0" />
-              <span>{community.upcoming_events_count || 0} upcoming</span>
-            </div>
+        <div className="px-5 pb-4 flex items-center gap-4 text-xs text-gray-500 font-inter">
+          <div className="flex items-center gap-1.5">
+            <FaUsers className="text-gray-400 shrink-0" />
+            <span>
+              {(community.members_count || 0).toLocaleString()} members
+            </span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <FaRegCalendar className="text-gray-400 shrink-0" />
+            <span>{community.upcoming_events_count || 0} upcoming</span>
           </div>
         </div>
       </div>
