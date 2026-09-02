@@ -12,7 +12,8 @@ import {
 
 import authReducer from "./slices/authSlices/authSlice";
 import registerReducer from "./slices/authSlices/registerSlice";
-import dataReducer from "./slices/dataSlices/dataSlice";
+import eventsReducer from "./slices/dataSlices/eventSlice";
+import communitiesReducer from "./slices/dataSlices/communitiesSlice";
 
 const storage = {
   getItem: (key) => Promise.resolve(window.localStorage.getItem(key)),
@@ -24,13 +25,13 @@ const storage = {
 const rootReducer = combineReducers({
   auth: authReducer,
   users: registerReducer,
-  data: dataReducer,
+  events: eventsReducer,
+  communities: communitiesReducer,
 });
 
 const persistConfig = {
   key: "eventhub-root",
   storage,
-  whitelist: ["auth", "users", "data"],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
