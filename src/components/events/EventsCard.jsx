@@ -11,20 +11,17 @@ import {
 import {
   joinEvent,
   toggleBookmarkEvent,
-} from "../../redux/slices/dataSlices/dataSlice";
-import { useAuth } from "../../context/AuthContext";
+} from "../../redux/slices/dataSlices/eventSlice";
+import useAuth from "../../hooks/useAuth";
 
 const EventCard = memo(function EventCard({ event }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { openAuthModal } = useAuth();
 
-  const currentUser = useSelector((state) => state.auth?.currentUser);
-  const isGuest = !currentUser;
-  const userEmail = currentUser?.email || "guest";
+  const { isGuest, userEmail, openAuthModal } = useAuth();
 
   const { userRegistrations = {}, userBookmarks = {} } = useSelector(
-    (state) => state.data || {},
+    (state) => state.events || {},
   );
 
   const isRegistered = (userRegistrations[userEmail] || []).includes(event?.id);
@@ -73,7 +70,6 @@ const EventCard = memo(function EventCard({ event }) {
       return;
     }
 
-    // Jika event penuh, penghentian dibantu atribut disabled pada tombol
     if (!event?.id || isFull) return;
     dispatch(toggleBookmarkEvent({ eventId: event.id, userEmail }));
   };
@@ -87,7 +83,12 @@ const EventCard = memo(function EventCard({ event }) {
         >
           <div className="h-48 w-full overflow-hidden bg-gray-100 dark:bg-gray-800 relative">
             <img
-              src={event.media?.thumbnail_url}
+              src={
+                event.coverImage ||
+                event.image ||
+                event.media?.thumbnail_url ||
+                event.media?.cover_url
+              }
               alt={event.title}
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
               loading="lazy"
