@@ -72,13 +72,15 @@ function Register() {
     return Object.keys(tempErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm()) return;
 
-    const result = dispatch(registerUser(fullName, email, password));
+    try {
+      await dispatch(
+        registerUser({ fullName, email, password }),
+      ).unwrap();
 
-    if (result.success) {
       toast.success("Register Berhasil!", {
         position: "top-center",
         autoClose: 1000,
@@ -87,12 +89,14 @@ function Register() {
       setTimeout(() => {
         navigate("/login");
       }, 1500);
-    } else {
-      toast.error(result.error || "Register gagal", {
+    } catch (errorMsg) {
+      const error =
+        typeof errorMsg === "string" ? errorMsg : "Register gagal";
+      toast.error(error, {
         position: "top-center",
         autoClose: 1000,
       });
-      setErrors({ email: result.error });
+      setErrors((prev) => ({ ...prev, email: error }));
     }
   };
 
