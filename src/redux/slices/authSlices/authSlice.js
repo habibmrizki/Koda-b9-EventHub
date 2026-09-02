@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 const initialState = {
   // null = guest. isi: { fullName, email, role, location, bio }
@@ -9,22 +9,67 @@ const initialState = {
   authModalRedirectPath: null,
 };
 
+export const loginUser = createAsyncThunk(
+  "auth/loginUser",
+  async (credentials, { getState, rejectWithValue }) => {
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 300));
+
+      let email = "";
+      let password = "";
+
+      if (typeof credentials === "object" && credentials !== null) {
+        email = credentials.email || "";
+        password = credentials.password || "";
+      } else {
+        email = String(credentials || "");
+      }
+
+      const adminEmail = import.meta.env.VITE_ADMIN_EMAIL;
+      const adminPassword = import.meta.env.VITE_ADMIN_PASSWORD;
+      const organizerEmail = import.meta.env.VITE_ORGANIZER_EMAIL;
+      const organizerPassword = import.meta.env.VITE_ORGANIZER_PASSWORD;
+
+      if (email === adminEmail && password === adminPassword) {
+        return { fullName: "Admin EventHub", email, role: "admin" };
+      }
+
+      if (email === organizerEmail && password === organizerPassword) {
+        return {
+          fullName: "Organizer EventHub",
+          email,
+          role: "organizer",
+        };
+      }
+
+      const { registeredUsers } = getState().users;
+      const found = registeredUsers?.find(
+        (u) => u.email.toLowerCase() === email?.toLowerCase(),
+      );
+
+      if (!found || found.password !== password) {
+        return rejectWithValue("Email atau password salah");
+      }
+
+      return {
+        fullName: found.fullName,
+        email: found.email,
+        role: "attendee",
+        location: found.location || "",
+        bio: found.bio || "",
+        joinedDate: found.joinedDate || "March 2026",
+        avatarUrl: found.avatarUrl || null,
+      };
+    } catch {
+      return rejectWithValue("Terjadi kesalahan saat login");
+    }
+  },
+);
+
 const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    loginStart(state) {
-      state.status = "loading";
-      state.error = null;
-    },
-    loginSuccess(state, action) {
-      state.status = "idle";
-      state.currentUser = action.payload;
-    },
-    loginFailed(state, action) {
-      state.status = "failed";
-      state.error = action.payload;
-    },
     logout(state) {
       state.currentUser = null;
       state.status = "idle";
@@ -45,73 +90,25 @@ const authSlice = createSlice({
       state.authModalRedirectPath = null;
     },
   },
+  extraReducers: (builder) => {
+    builder
+      .addCase(loginUser.pending, (state) => {
+        state.status = "loading";
+        state.error = null;
+      })
+      .addCase(loginUser.fulfilled, (state, action) => {
+        state.status = "idle";
+        state.currentUser = action.payload;
+        state.error = null;
+      })
+      .addCase(loginUser.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload;
+      });
+  },
 });
 
-export const {
-  loginStart,
-  loginSuccess,
-  loginFailed,
-  logout,
-  updateCurrentUser,
-  openAuthModal,
-  closeAuthModal,
-} = authSlice.actions;
+export const { logout, updateCurrentUser, openAuthModal, closeAuthModal } =
+  authSlice.actions;
+
 export default authSlice.reducer;
-
-// LOGIN
-export const loginUser = (email, password) => (dispatch, getState) => {
-  dispatch(loginStart());
-
-  const adminEmail = import.meta.env.VITE_ADMIN_EMAIL;
-  const adminPassword = import.meta.env.VITE_ADMIN_PASSWORD;
-  const organizerEmail = import.meta.env.VITE_ORGANIZER_EMAIL;
-  const organizerPassword = import.meta.env.VITE_ORGANIZER_PASSWORD;
-
-  if (email === adminEmail && password === adminPassword) {
-    dispatch(
-      loginSuccess({ fullName: "Admin EventHub", email, role: "admin" }),
-    );
-    return { success: true };
-  }
-
-  if (email === organizerEmail && password === organizerPassword) {
-    dispatch(
-      loginSuccess({
-        fullName: "Organizer EventHub",
-        email,
-        role: "organizer",
-      }),
-    );
-    return { success: true };
-  }
-
-  const { registeredUsers } = getState().users;
-  const found = registeredUsers.find(
-    (u) => u.email.toLowerCase() === email.toLowerCase(),
-  );
-
-  if (!found) {
-    const errorMsg = "Email tidak terdaftar";
-    dispatch(loginFailed(errorMsg));
-    return { success: false, error: errorMsg };
-  }
-
-  if (found.password !== password) {
-    const errorMsg = "Password salah";
-    dispatch(loginFailed(errorMsg));
-    return { success: false, error: errorMsg };
-  }
-
-  dispatch(
-    loginSuccess({
-      fullName: found.fullName,
-      email: found.email,
-      role: "attendee",
-      location: found.location || "",
-      bio: found.bio || "",
-      joinedDate: found.joinedDate || "March 2026",
-      avatarUrl: found.avatarUrl || null,
-    }),
-  );
-  return { success: true };
-};
