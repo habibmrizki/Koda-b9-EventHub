@@ -32,6 +32,7 @@ import CreateEvent from "../pages/Organizer/createEdit/CreateEvent";
 
 // My Events
 import MyEvents from "../pages/my-events/MyEvents";
+import NotFound from "../pages/not-found/NotFound";
 // import Mnt from "../pages/Mnt";
 
 export default function MainRoutes() {
@@ -130,6 +131,14 @@ export default function MainRoutes() {
           }
         />
 
+        <Route
+          path="/organizer/edit-event/:id"
+          element={
+            <ProtectedRoute>
+              <CreateEvent />
+            </ProtectedRoute>
+          }
+        />
         {/* Admin Dashboard Routes  */}
         <Route
           path="/dashboard"
@@ -148,6 +157,9 @@ export default function MainRoutes() {
           <Route path="events" element={<DashboardEvents />} />
           <Route path="communities" element={<DashboardCommunities />} />
         </Route>
+
+        {/* Catch-all 404 Route */}
+        <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>
   );
