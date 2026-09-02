@@ -51,11 +51,11 @@ function Login() {
     setIsPasswordInvalid(!validatePassword(newPassword));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const isEmailValid = email.trim() !== "" && emailPattern.test(email);
-    const isPasswordValid = validatePassword(password);
+    const isPasswordValid = password.trim() !== "";
 
     setIsEmailInvalid(!isEmailValid);
     setIsPasswordInvalid(!isPasswordValid);
@@ -68,9 +68,9 @@ function Login() {
       return;
     }
 
-    const result = dispatch(loginUser(email, password));
+    try {
+      await dispatch(loginUser({ email, password })).unwrap();
 
-    if (result && result.success) {
       toast.success("Login Berhasil!", {
         position: "top-center",
         autoClose: 1000,
@@ -79,13 +79,14 @@ function Login() {
       setTimeout(() => {
         navigate("/explore", { replace: true });
       }, 1200);
-    } else {
-      const errorMsg = result?.error || "Login gagal, silakan coba lagi";
-      toast.error(errorMsg, {
+    } catch (errorMsg) {
+      const error =
+        typeof errorMsg === "string" ? errorMsg : "Login gagal, silakan coba lagi";
+      toast.error(error, {
         position: "top-center",
         autoClose: 1500,
       });
-      setGeneralError(errorMsg);
+      setGeneralError(error);
     }
   };
 
