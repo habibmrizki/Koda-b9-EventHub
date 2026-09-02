@@ -9,6 +9,7 @@ import {
   MdOutlineGridView,
 } from "react-icons/md";
 import { useSelector, useDispatch } from "react-redux";
+import { toast } from "react-toastify"; 
 import { logout, openAuthModal } from "../../redux/slices/authSlices/authSlice";
 import { ThemeContext } from "../../context/theme/themeContext";
 import { DEFAULT_AVATAR } from "../../utils/constants";
@@ -27,11 +28,8 @@ function Header() {
 
   const [profileOpen, setProfileOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-  // State untuk kontrol Modal Logout
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
 
-  // Trigger saat tombol Sign Out diklik
   const handleLogoutClick = (e) => {
     if (e) e.stopPropagation();
     setProfileOpen(false);
@@ -44,9 +42,12 @@ function Header() {
     setIsLogoutModalOpen(false);
     navigate("/explore", { replace: true });
     dispatch(logout());
+    
+    toast.success("Anda berhasil keluar!", {
+      autoClose: 1000,
+    });
   };
 
-  // Batal Logout
   const handleCancelLogout = () => {
     setIsLogoutModalOpen(false);
   };
@@ -85,7 +86,6 @@ function Header() {
     <>
       <header className="px-4 sm:px-6 py-3 border-b border-gray-200 bg-[#f3f4f6] dark:bg-gray-900 dark:border-gray-800 dark:text-white relative z-50">
         <div className="flex items-center justify-between">
-          {/* Bagian Kiri Navbar */}
           <div className="flex items-center gap-6">
             <Link to="/explore" className="flex items-center space-x-2">
               <span className="w-8 h-8 bg-[#ff5722] rounded-lg flex items-center justify-center font-bold font-jakarta text-white shadow-sm">
@@ -96,7 +96,6 @@ function Header() {
               </span>
             </Link>
 
-            {/* Navbar Menu */}
             <nav className="hidden md:block">
               <ul className="flex gap-1 items-center">
                 <li>
@@ -137,7 +136,6 @@ function Header() {
             </nav>
           </div>
 
-          {/* Bagian Kanan Navbar */}
           <div className="flex gap-2 sm:gap-3 items-center relative">
             <div className="hidden md:flex items-center gap-3">
               {isGuest ? (
@@ -266,7 +264,6 @@ function Header() {
               )}
             </div>
 
-            {/* MOBILE MENU TOGGLE */}
             <button
               type="button"
               onClick={() => setMobileMenuOpen((v) => !v)}
@@ -280,7 +277,6 @@ function Header() {
               )}
             </button>
 
-            {/* MOBILE MENU DROPDOWN */}
             {mobileMenuOpen && (
               <div className="md:hidden absolute right-0 top-12 w-70 bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-2xl shadow-2xl overflow-hidden z-50">
                 {!isGuest ? (
