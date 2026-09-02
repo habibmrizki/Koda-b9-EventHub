@@ -1,0 +1,28 @@
+FROM ubuntu:24.04
+
+# Update repo dan install SSH server
+RUN apt-get update && apt-get install openssh-server -y
+
+# Menambahkan directory /run/sshd
+RUN mkdir -p /run/sshd
+
+# Membuat user non-root 'habib'
+RUN useradd -ms /bin/bash habib
+
+# Buat folder .ssh dan copy public key
+RUN mkdir -p /home/habib/.ssh
+COPY access_secret.pub /home/habib/.ssh/authorized_keys
+
+# Fix Ownership & Permissions 
+RUN chown -R habib:habib /home/habib/.ssh && \
+    chmod 700 /home/habib/.ssh && \
+    chmod 600 /home/habib/.ssh/authorized_keys
+
+# Security Hardening: Disable password & root login, enable pubkey auth
+RUN sed -i 's/#*PasswordAuthentication.*/PasswordAuthentication no/' /etc/ssh/sshd_config && \
+    sed -i 's/#*PermitRootLogin.*/PermitRootLogin no/' /etc/ssh/sshd_config && \
+    sed -i 's/#*PubkeyAuthentication.*/PubkeyAuthentication yes/' /etc/ssh/sshd_config
+
+EXPOSE 22
+
+CMD [ "/usr/sbin/sshd", "-D", "-e" ]
