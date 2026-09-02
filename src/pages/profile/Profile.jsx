@@ -153,6 +153,11 @@ function Profile() {
     setIsEditOpen(false);
   };
 
+  // Regex Validasi Password
+  const regexKecil = /[a-z]/;
+  const regexBesar = /[A-Z]/;
+  const spesialChar = /[!@#$%^&*/><]/;
+
   const handleChangePasswordSubmit = (e) => {
     e.preventDefault();
     setPasswordError("");
@@ -171,8 +176,23 @@ function Profile() {
       return;
     }
 
-    if (passwordData.newPassword.length < 6) {
-      setPasswordError("Password baru minimal 6 karakter!");
+    if (passwordData.newPassword.length < 8) {
+      setPasswordError("Password baru minimal 8 karakter!");
+      return;
+    }
+
+    if (!regexKecil.test(passwordData.newPassword)) {
+      setPasswordError("Password baru minimal harus ada huruf kecil!");
+      return;
+    }
+
+    if (!regexBesar.test(passwordData.newPassword)) {
+      setPasswordError("Password baru harus ada huruf Besar!");
+      return;
+    }
+
+    if (!spesialChar.test(passwordData.newPassword)) {
+      setPasswordError("Password baru harus ada karakter spesial !@#$%^&*/><!");
       return;
     }
 
