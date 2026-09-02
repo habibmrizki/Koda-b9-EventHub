@@ -10,18 +10,18 @@ import {
 import {
   joinEvent,
   toggleBookmarkEvent,
-} from "../../redux/slices/dataSlices/dataSlice";
+} from "../../redux/slices/dataSlices/eventSlice";
+
+import useAuth from "../../hooks/useAuth";
 
 export default function TabEvents({ events = [] }) {
   const dispatch = useDispatch();
 
-  //  Ambil data user aktif dari Redux
-  const currentUser = useSelector((state) => state.auth?.currentUser);
-  const userEmail = currentUser?.email || "guest";
+  const { userEmail } = useAuth();
 
-  // Ambil pendaftaran & bookmark global dari Redux
+
   const { userRegistrations = {}, userBookmarks = {} } = useSelector(
-    (state) => state.data || {},
+    (state) => state.events || {},
   );
 
   // Normalisasi ID ke String agar pencocokan presisi
