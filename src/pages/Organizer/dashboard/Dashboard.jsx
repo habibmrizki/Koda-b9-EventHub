@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import {
@@ -18,7 +18,23 @@ const Dashboard = () => {
   const chartRef = useRef(null);
   const chartInstanceRef = useRef(null);
 
-  const events = useSelector((state) => state.data?.events || []);
+  const events = useSelector((state) => state.events?.items || []);
+
+  // State untuk Pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 3;
+
+  // Hitung Indeks & Potong Data Event
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentEvents = events.slice(indexOfFirstItem, indexOfLastItem);
+
+  // Hitung Total Halaman
+  const totalPages = Math.ceil(events.length / itemsPerPage);
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
 
   const getEventData = (event) => {
     const registered = event.tickets?.registered ?? event.attendees ?? 0;
@@ -28,7 +44,6 @@ const Dashboard = () => {
       event.image ||
       "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5";
 
-    // Format tanggal dan lokasi
     let dateLoc = event.dateLocation;
     if (!dateLoc && event.schedule?.date) {
       const city = event.location?.city || "WIB";
@@ -214,6 +229,7 @@ const Dashboard = () => {
       }
     };
   }, []);
+
   return (
     <div className="min-h-screen bg-gray-50/50 p-6 font-sans text-gray-800">
       {/* Header Section */}
@@ -271,9 +287,8 @@ const Dashboard = () => {
               Belum ada event yang dibuat. Silakan klik "Create Event" di atas.
             </div>
           ) : (
-            events.map((event) => {
-              const { registered, capacity, image, dateLoc } =
-                getEventData(event);
+            currentEvents.map((event) => {
+              const { registered, capacity, dateLoc } = getEventData(event);
               const percentage = Math.round((registered / capacity) * 100);
 
               return (
@@ -284,7 +299,11 @@ const Dashboard = () => {
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex items-start gap-4">
                       <img
-                        src={image}
+                        src={
+                          event.image ||
+                          event.media?.thumbnail_url ||
+                          event.media?.cover_url
+                        }
                         alt={event.title}
                         className="w-16 h-16 rounded-lg object-cover shrink-0"
                       />
@@ -317,7 +336,9 @@ const Dashboard = () => {
 
                   <div className="flex items-center gap-3 pt-2">
                     <button
-                      // onClick={() => navigate(`/events/edit/${event.id}`)}
+                      onClick={() =>
+                        navigate(`/organizer/edit-event/${event.id}`)
+                      }
                       className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-gray-700 bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded-md transition-colors cursor-pointer"
                     >
                       <Pencil size={13} />
@@ -331,6 +352,55 @@ const Dashboard = () => {
                 </div>
               );
             })
+          )}
+
+          {/* PINDAHKAN CONTROL PAGINATION KE SINI  */}
+          {totalPages > 1 && (
+            <div className="flex flex-col sm:flex-row items-center justify-between pt-4 border-t border-gray-200 gap-3">
+              <p className="text-xs text-gray-600">
+                Showing{" "}
+                <span className="font-medium">{indexOfFirstItem + 1}</span> to{" "}
+                <span className="font-medium">
+                  {Math.min(indexOfLastItem, events.length)}
+                </span>{" "}
+                of <span className="font-medium">{events.length}</span> events
+              </p>
+
+              <div className="flex items-center gap-1.5">
+                <button
+                  onClick={() => handlePageChange(currentPage - 1)}
+                  disabled={currentPage === 1}
+                  className="px-2.5 py-1 text-xs border rounded-md disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100 bg-white"
+                >
+                  Previous
+                </button>
+
+                {Array.from(
+                  { length: totalPages },
+                  (_, index) => index + 1,
+                ).map((page) => (
+                  <button
+                    key={page}
+                    onClick={() => handlePageChange(page)}
+                    className={`px-2.5 py-1 text-xs border rounded-md ${
+                      currentPage === page
+                        ? "bg-orange-500 text-white border-orange-500 font-medium"
+                        : "hover:bg-gray-100 bg-white"
+                    }`}
+                  >
+                    {page}
+                  </button>
+                ))}
+
+                <button
+                  onClick={() => handlePageChange(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                  className="px-2.5 py-1 text-xs border rounded-md disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100 bg-white"
+                >
+                  Next
+                </button>
+              </div>
+            </div>
           )}
         </div>
 
@@ -374,7 +444,7 @@ const Dashboard = () => {
               Upcoming Events
             </h3>
             <div className="space-y-3">
-              {events.map((event) => {
+              {events.slice(0, 5).map((event) => {
                 const { registered, capacity, dateLoc } = getEventData(event);
                 return (
                   <div
