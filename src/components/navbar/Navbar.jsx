@@ -280,13 +280,17 @@ function Header() {
             {mobileMenuOpen && (
               <div className="md:hidden absolute right-0 top-12 w-70 bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-2xl shadow-2xl overflow-hidden z-50">
                 {!isGuest ? (
-                  <div className="px-4 py-3.5 border-b border-gray-100 dark:border-gray-700 flex items-center gap-3 bg-gray-50/50 dark:bg-gray-800/50">
+                  <Link
+                    to="/profile"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="px-4 py-3.5 border-b border-gray-100 dark:border-gray-700 flex items-center gap-3 bg-gray-50/50 dark:bg-gray-800/50 hover:bg-gray-100/80 dark:hover:bg-gray-700/50 transition cursor-pointer"
+                  >
                     <img
                       src={avatarUrl}
                       alt={user.fullName}
                       className="w-10 h-10 rounded-full object-cover border border-gray-200 shrink-0"
                     />
-                    <div className="min-w-0">
+                    <div className="min-w-0 flex-1">
                       <p className="font-inter font-bold text-sm text-gray-900 dark:text-white leading-tight truncate">
                         {user.fullName}
                       </p>
@@ -294,7 +298,7 @@ function Header() {
                         {user.email}
                       </p>
                     </div>
-                  </div>
+                  </Link>
                 ) : (
                   <div className="px-4 py-3 border-b border-gray-100 bg-gray-50/50">
                     <p className="font-inter font-semibold text-xs text-gray-500">
@@ -325,15 +329,7 @@ function Header() {
                   >
                     Communities
                   </NavLink>
-                  {!isGuest && (
-                    <NavLink
-                      to="/my-events"
-                      className={dropdownLinkStyle}
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      My Events
-                    </NavLink>
-                  )}
+              
                   {dashboardPath && (
                     <NavLink
                       to={dashboardPath}
