@@ -5,8 +5,12 @@ export const fetchCommunities = createAsyncThunk(
   "communities/fetchCommunities",
   async (_, { rejectWithValue }) => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 100));
-      return initialCommunitiesData;
+      const data = await new Promise((resolve) => {
+        setTimeout(() => {
+          resolve(initialCommunitiesData);
+        }, 100);
+      });
+      return data;
     } catch {
       return rejectWithValue("Gagal mengambil data communities");
     }

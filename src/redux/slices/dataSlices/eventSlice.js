@@ -8,8 +8,12 @@ export const fetchEvents = createAsyncThunk(
   "events/fetchEvents",
   async (_, { rejectWithValue }) => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 100));
-      return eventsData;
+      const data = await new Promise((resolve) => {
+        setTimeout(() => {
+          resolve(eventsData);
+        }, 100);
+      });
+      return data;
     } catch {
       return rejectWithValue("Gagal mengambil data events");
     }
