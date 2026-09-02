@@ -4,7 +4,7 @@ import { useSearchParams } from "react-router-dom";
 import {
   fetchCommunities,
   toggleJoinCommunity,
-} from "../../redux/slices/dataSlices/dataSlice";
+} from "../../redux/slices/dataSlices/communitiesSlice";
 import CommunityCard from "../../components/communities/CommunitiesCard";
 import { FaSearch } from "react-icons/fa";
 
@@ -13,8 +13,12 @@ export default function Communities() {
   const [searchParams, setSearchParams] = useSearchParams();
 
   // Ambil state communities dan user info dari Redux
-  const { communities, loadingCommunities, errorCommunities, userCommunities } =
-    useSelector((state) => state.data);
+  const {
+    items: communities,
+    loading: loadingCommunities,
+    error: errorCommunities,
+    userCommunities = {},
+  } = useSelector((state) => state.communities);
   const currentUser = useSelector((state) => state.auth?.currentUser);
   const userEmail = currentUser?.email || "guest";
 
@@ -75,17 +79,31 @@ export default function Communities() {
   };
 
   // Handler Status Filter
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  // Handler Search Query
+  // const handleSearchChange = (e) => {
+  //   const val = e.target.value;
+  //   setSearchQuery(val);
+  //   updateUrlParams(val, statusFilter, categoryFilter);
+  // };
+
   const handleStatusChange = (st) => {
     setStatusFilter(st);
     updateUrlParams(searchQuery, st, categoryFilter);
   };
 
-  // Handler Search Query
-  const handleSearchChange = (e) => {
-    const val = e.target.value;
-    setSearchQuery(val);
-    updateUrlParams(val, statusFilter, categoryFilter);
-  };
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (searchQuery !== querySearch) {
+        updateUrlParams(searchQuery, statusFilter, categoryFilter);
+      }
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
 
   const handleToggleJoin = (id) => {
     dispatch(toggleJoinCommunity({ communityId: id, userEmail }));
