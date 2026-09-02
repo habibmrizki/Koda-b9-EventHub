@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
+import { useSelector } from "react-redux";
 import communitiesData from "../../data/Communities.json";
 import CommunityHeader from "../../components/communities/CommunitiesHeader";
 import TabEvents from "../../components/communities/TabEvents";
@@ -8,6 +9,7 @@ import TabDiscussion from "../../components/communities/TabDiscussion";
 
 export default function CommunitiesDetail() {
   const { id } = useParams();
+  const currentUser = useSelector((state) => state.auth?.currentUser);
 
   // searchParams untuk membaca dan mengubah tab di URL
   const [searchParams, setSearchParams] = useSearchParams();
@@ -41,11 +43,23 @@ export default function CommunitiesDetail() {
 
   const handleAddDiscussion = (newText) => {
     if (!community) return;
+
+    const authorName =
+      currentUser?.fullName ||
+      currentUser?.name ||
+      currentUser?.email?.split("@")[0] ||
+      "Guest User";
+
+    const authorAvatar =
+      currentUser?.avatarUrl ||
+      currentUser?.avatar ||
+      currentUser?.avatar_url ||
+      null;
+
     const newDiscussion = {
       id: Date.now(),
-      author: "You",
-      avatar:
-        "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&auto=format&fit=crop&q=80",
+      author: authorName,
+      avatar: authorAvatar,
       timeAgo: "Just now",
       content: newText,
     };
