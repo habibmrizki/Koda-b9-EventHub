@@ -1,12 +1,12 @@
 import { useState, useMemo, useEffect, useCallback } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import { fetchEvents } from "../../redux/slices/dataSlices/eventSlice";
 import {
-  fetchEvents,
   fetchCommunities,
   toggleJoinCommunity,
-} from "../../redux/slices/dataSlices/dataSlice";
-import { openAuthModal } from "../../redux/slices/authSlices/authSlice";
+} from "../../redux/slices/dataSlices/communitiesSlice";
+import useAuth from "../../hooks/useAuth";
 
 import EventCard from "../../components/events/EventsCard";
 import CommunityCard from "../../components/communities/CommunitiesCard";
@@ -15,18 +15,13 @@ function LandingPage() {
   const dispatch = useDispatch();
   const [searchParams, setSearchParams] = useSearchParams();
 
-  // Redux Selectors
-  const currentUser = useSelector((state) => state.auth.currentUser);
-  const isGuest = !currentUser;
+  // Redux & Auth Hook
+  const { isGuest, openAuthModal } = useAuth();
 
-  const {
-    events,
-    communities,
-    loadingEvents,
-    loadingCommunities,
-    errorEvents,
-    errorCommunities,
-  } = useSelector((state) => state.data);
+  const { items: events = [], loading: loadingEvents, error: errorEvents } =
+    useSelector((state) => state.events || {});
+  const { items: communities = [], loading: loadingCommunities, error: errorCommunities } =
+    useSelector((state) => state.communities || {});
 
   useEffect(() => {
     if (events.length === 0) {
@@ -63,7 +58,7 @@ function LandingPage() {
         e.preventDefault();
         e.stopPropagation();
       }
-      dispatch(openAuthModal(targetPath));
+      openAuthModal(targetPath);
       return true;
     }
     return false;
@@ -71,7 +66,7 @@ function LandingPage() {
 
   const handleToggleJoin = (id) => {
     if (isGuest) {
-      dispatch(openAuthModal("/communities"));
+      openAuthModal("/communities");
       return;
     }
     dispatch(toggleJoinCommunity(id));
@@ -250,7 +245,7 @@ function LandingPage() {
 
       {/* Main Content Area */}
       <section className="bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-white py-12 px-4 md:px-8 lg:px-12 rounded-t-3xl transition-colors duration-200">
-        <div className="max-w-7xl mx-auto space-y-16">
+        <div className="space-y-16">
           {isLoading && (
             <div className="text-center py-12">
               <p className="text-orange-500 font-semibold animate-pulse">
