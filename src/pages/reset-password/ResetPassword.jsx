@@ -128,6 +128,7 @@ function ResetPassword() {
             id="email"
             placeholder="mail@example.com"
             value={email}
+            disabled={!!initialEmail} 
             onChange={(e) => {
               setEmail(e.target.value);
               if (errors.email) setErrors((prev) => ({ ...prev, email: "" }));
