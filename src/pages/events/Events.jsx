@@ -37,9 +37,11 @@ export default function Events() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [showFilters, setShowFilters] = useState(false);
 
-  const { items: events, loading: loadingEvents, error: errorEvents } = useSelector(
-    (state) => state.events,
-  );
+  const {
+    items: events,
+    loading: loadingEvents,
+    error: errorEvents,
+  } = useSelector((state) => state.events);
 
   // // Fetch events via Redux Thunk
   // useEffect(() => {
@@ -186,7 +188,7 @@ export default function Events() {
 
   return (
     <div className="bg-[#f8f9fa] dark:bg-gray-950 min-h-screen font-inter text-gray-900 dark:text-gray-100 pb-16 transition-colors duration-200">
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 pt-8">
+      <main className="py-12 px-4 md:px-8 lg:px-12">
         <div className="flex items-center gap-3 mb-6">
           <div className="relative flex-1">
             <FiSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 text-lg" />

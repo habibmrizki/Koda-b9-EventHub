@@ -231,7 +231,7 @@ const Dashboard = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-50/50 p-6 font-sans text-gray-800">
+    <div className="min-h-screen py-5 px-8 md:px-16 lg:px-20 bg-gray-50/50 p-6 font-sans text-gray-800">
       {/* Header Section */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
         <div>

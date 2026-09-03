@@ -18,10 +18,16 @@ function LandingPage() {
   // Redux & Auth Hook
   const { isGuest, openAuthModal } = useAuth();
 
-  const { items: events = [], loading: loadingEvents, error: errorEvents } =
-    useSelector((state) => state.events || {});
-  const { items: communities = [], loading: loadingCommunities, error: errorCommunities } =
-    useSelector((state) => state.communities || {});
+  const {
+    items: events = [],
+    loading: loadingEvents,
+    error: errorEvents,
+  } = useSelector((state) => state.events || {});
+  const {
+    items: communities = [],
+    loading: loadingCommunities,
+    error: errorCommunities,
+  } = useSelector((state) => state.communities || {});
 
   useEffect(() => {
     if (events.length === 0) {

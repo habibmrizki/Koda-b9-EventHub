@@ -11,7 +11,7 @@ export default function DashboardLayout() {
 
   return (
     <div className="bg-gray-50 min-h-screen pb-12 font-inter text-gray-900">
-      <div className="max-w-7xl mx-auto px-4 md:px-8 pt-8">
+      <div className="px-4 lg:px-20 md:px-8 pt-8">
         {/* Header Admin Dashboard */}
         <div className="flex items-center gap-3 mb-6">
           <div className="w-10 h-10 rounded-xl bg-orange-100 flex items-center justify-center text-orange-600">

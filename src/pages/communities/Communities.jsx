@@ -163,7 +163,7 @@ export default function Communities() {
         </div>
       </section>
       <section className="bg-gray-50 text-gray-900 min-h-screen py-8 px-4 md:px-8 lg:px-12 rounded-t-3xl">
-        <div className="max-w-7xl mx-auto space-y-6">
+        <div className="md:py-8 px-12 md:px-8 lg:px-12 space-y-6">
           <div className="flex flex-wrap items-center gap-3 border-b border-gray-200/80 pb-4">
             {/* Filter Status */}
             <div className="flex gap-1 bg-white p-1 rounded-xl text-xs font-semibold text-gray-600">
